@@ -1,0 +1,12 @@
+
+// Feature source code generation begins here...
+public:
+  virtual SpriteDemo& sizeAndPositionAppWindow();
+  virtual IPoint fastMovementMultiplier() const;
+  virtual SpriteDemo& setFastMovementMultiplier(const IPoint& aFastMovementMultiplier);
+
+  static INotificationId fastMovementMultiplierId;
+
+private:
+  IPoint iFastMovementMultiplier;
+// Feature source code generation ends here.

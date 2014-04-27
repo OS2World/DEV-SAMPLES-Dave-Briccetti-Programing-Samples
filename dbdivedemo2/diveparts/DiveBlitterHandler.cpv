@@ -1,0 +1,69 @@
+#include "DiveBlitterHandler.cppcst"
+
+// Feature source code generation begins here...
+INotificationId DiveBlitterHandler::windowId = "DiveBlitterHandler::window";
+INotificationId DiveBlitterHandler::diveHandleId = "DiveBlitterHandler::diveHandle";
+INotificationId DiveBlitterHandler::blittingId = "DiveBlitterHandler::blitting";
+
+IWindow* DiveBlitterHandler::window() const
+{
+  return iWindow;
+}
+
+DiveBlitterHandler& DiveBlitterHandler::setWindow(IWindow* aWindow)
+{
+  if (!(iWindow == aWindow))
+  {
+    iWindow = aWindow;
+    notifyObservers(INotificationEvent(DiveBlitterHandler::windowId, *this));
+  } // endif
+  return *this;
+}
+
+HDIVE DiveBlitterHandler::diveHandle() const
+{
+  return iDiveHandle;
+}
+
+DiveBlitterHandler& DiveBlitterHandler::setDiveHandle(HDIVE aDiveHandle)
+{
+  if (!(iDiveHandle == aDiveHandle))
+  {
+    iDiveHandle = aDiveHandle;
+    notifyObservers(INotificationEvent(DiveBlitterHandler::diveHandleId, *this));
+  } // endif
+  return *this;
+}
+
+Boolean DiveBlitterHandler::isBlitting() const
+{
+  return iBlitting;
+}
+
+// Feature source code generation ends here.
+
+
+// Feature source code generation begins here...
+INotificationId DiveBlitterHandler::drawingSerializerId = "DiveBlitterHandler::drawingSerializer";
+
+IPrivateResource* DiveBlitterHandler::drawingSerializer() const
+{
+  return iDrawingSerializer;
+}
+
+// Feature source code generation ends here.
+
+
+// Feature source code generation begins here...
+
+DiveBlitterHandler& DiveBlitterHandler::setDrawingSerializer(IPrivateResource* aDrawingSerializer)
+{
+  if (!(iDrawingSerializer == aDrawingSerializer))
+  {
+    iDrawingSerializer = aDrawingSerializer;
+    notifyObservers(INotificationEvent(DiveBlitterHandler::drawingSerializerId, *this));
+  } // endif
+  return *this;
+}
+
+// Feature source code generation ends here.

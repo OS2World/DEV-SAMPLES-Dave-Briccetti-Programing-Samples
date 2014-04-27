@@ -1,0 +1,18 @@
+
+#include "Star.hppcst"
+
+// Feature source code generation begins here...
+public:
+  virtual IPoint position() const;
+  virtual Star& setPosition(const IPoint& aPosition);
+  virtual int distanceIndex() const;
+  virtual Star& setDistanceIndex(int aDistanceIndex);
+
+  static INotificationId positionId;
+  static INotificationId distanceIndexId;
+
+private:
+  IPoint iPosition;
+  int iDistanceIndex;
+// Feature source code generation ends here.
+

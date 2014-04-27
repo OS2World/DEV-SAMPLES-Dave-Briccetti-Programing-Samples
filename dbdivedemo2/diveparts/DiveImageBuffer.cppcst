@@ -1,0 +1,96 @@
+void DiveImageBuffer::userConstructor ()
+{
+   IFUNCTRACE_DEVELOP();
+   iBuffer = 0;
+   bufferLength = 0;
+}
+
+void DiveImageBuffer::userDestructor ()
+{
+}
+
+DiveImageBuffer& DiveImageBuffer::setSize(const ISize& aSize)
+{
+  IFUNCTRACE_DEVELOP();
+  IResourceLock lock (*iDrawingSerializer, 3000);
+
+  if (!(iSize == aSize))
+  {
+    static UINT const RoundingMask = ~7;  // Round to next lowest multiple of 8
+    iSize.setWidth  (aSize.width() & RoundingMask);
+    iSize.setHeight (aSize.height());
+    bufferLength = iSize.width() * iSize.height();
+    ITRACE_DEVELOP (IString("Size: ") + aSize.asString());
+    allocate (iSize);
+    notifyObservers(INotificationEvent(DiveImageBuffer::sizeId, *this));
+  } // endif
+  return *this;
+}
+
+void DiveImageBuffer::allocate(ISize const & aSize)
+{
+   IFUNCTRACE_DEVELOP();
+   IResourceLock lock (*iDrawingSerializer, 3000);
+   IASSERTPARM  (aSize.width()  != 0);
+   IASSERTPARM  (aSize.height() != 0);
+   IASSERTSTATE (iDiveHandle    != 0);
+   ITRACE_DEVELOP (IString("Size: ") + aSize.asString());
+
+   if (iBuffer)
+      deallocate ();
+
+   APIRET rc = DosAllocMem ((PPVOID) &iBuffer,
+                            bufferLength,
+                            PAG_COMMIT | PAG_EXECUTE | PAG_READ | PAG_WRITE );
+   if (rc != NO_ERROR)
+      ITHROWSYSTEMERROR (rc, "DosAllocMem",
+         IErrorInfo::accessError, IException::unrecoverable);
+
+   ULONG imageNumberNew = 0;
+   rc = DiveAllocImageBuffer (iDiveHandle,
+                              &imageNumberNew,
+                              FOURCC_LUT8,
+                              iSize.width(),
+                              iSize.height(),
+                              0,
+                              (PBYTE) iBuffer);
+   if (rc != DIVE_SUCCESS)
+   {
+      IString msg ("DiveAllocImageBuffer failed: " + IString(rc));
+      IAccessError err (msg);
+      ITHROW (err);
+   }
+
+   setImageNumber (imageNumberNew);
+}
+
+void DiveImageBuffer::deallocate()
+{
+   APIRET rc = DiveFreeImageBuffer (iDiveHandle, iImageNumber);
+   if (rc != DIVE_SUCCESS)
+   {
+      IString msg ("DiveFreeImageBuffer: " + IString(rc));
+      IAccessError err (msg);
+      ITHROW (err);
+   }
+
+   setImageNumber (0);
+
+   IASSERTSTATE (iBuffer);
+   DosFreeMem (iBuffer);
+   iBuffer = 0;
+}
+
+void DiveImageBuffer::clear()
+{
+   if (bufferLength == 0)
+   {
+      IString msg ("A buffer must be allocated before a clear is requested");
+      IInvalidRequest err (msg);
+      ITHROW (err);
+   }
+   memset (iBuffer, 0, bufferLength);
+}
+
+
+

@@ -1,0 +1,86 @@
+#include "FastCanvas.cppcst"
+
+
+
+// Feature source code generation begins here...
+INotificationId FastCanvas::bufferId = "FastCanvas::buffer";
+INotificationId FastCanvas::diveHandleId = "FastCanvas::diveHandle";
+INotificationId FastCanvas::bufferSizeId = "FastCanvas::bufferSize";
+INotificationId FastCanvas::systemTimerIntervalMillisecondTenthsId = "FastCanvas::systemTimerIntervalMillisecondTenths";
+INotificationId FastCanvas::animationRunningId = "FastCanvas::animationRunning";
+INotificationId FastCanvas::priorityClassId = "FastCanvas::priorityClass";
+INotificationId FastCanvas::visibleRegionEnabledId = "FastCanvas::visibleRegionEnabled";
+
+FastCanvas& FastCanvas::setDiveHandle(HDIVE aDiveHandle)
+{
+  if (!(iDiveHandle == aDiveHandle))
+  {
+    iDiveHandle = aDiveHandle;
+    notifyObservers(INotificationEvent(FastCanvas::diveHandleId, *this));
+  } // endif
+  return *this;
+}
+
+DiveImageRenderer* FastCanvas::diveImageRenderer() const
+{
+  return iDiveImageRenderer;
+}
+
+ULONG FastCanvas::systemTimerIntervalMillisecondTenths() const
+{
+  return iSystemTimerIntervalMillisecondTenths;
+}
+
+FastCanvas& FastCanvas::setSystemTimerIntervalMillisecondTenths(ULONG aSystemTimerIntervalMillisecondTenths)
+{
+  if (!(iSystemTimerIntervalMillisecondTenths == aSystemTimerIntervalMillisecondTenths))
+  {
+    iSystemTimerIntervalMillisecondTenths = aSystemTimerIntervalMillisecondTenths;
+    notifyObservers(INotificationEvent(FastCanvas::systemTimerIntervalMillisecondTenthsId, *this));
+  } // endif
+  return *this;
+}
+
+IApplication::PriorityClass FastCanvas::priorityClass() const
+{
+  return iPriorityClass;
+}
+
+
+Boolean FastCanvas::isVisibleRegionEnabled() const
+{
+  return iVisibleRegionEnabled;
+}
+
+FastCanvas& FastCanvas::enableVisibleRegionEnabled(Boolean enable)
+{
+  if (!(iVisibleRegionEnabled == enable))
+  {
+    iVisibleRegionEnabled = enable;
+    notifyObservers(INotificationEvent(FastCanvas::visibleRegionEnabledId, *this));
+  } // endif
+  return *this;
+}
+
+// Feature source code generation ends here.
+
+
+// Feature source code generation begins here...
+
+FastCanvas& FastCanvas::enableAnimationRunning(Boolean enable)
+{
+  if (!(iAnimationRunning == enable))
+  {
+    iAnimationRunning = enable;
+    notifyObservers(INotificationEvent(FastCanvas::animationRunningId, *this));
+  } // endif
+  return *this;
+}
+
+// Feature source code generation ends here.
+
+
+// Feature source code generation begins here...
+INotificationId FastCanvas::colorDepthId = "FastCanvas::colorDepth";
+
+// Feature source code generation ends here.

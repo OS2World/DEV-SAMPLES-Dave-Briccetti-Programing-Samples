@@ -1,0 +1,62 @@
+#include "FaderRenderer.cppcst"
+
+
+// Feature source code generation begins here...
+INotificationId FaderRenderer::fastCanvasId = "FaderRenderer::fastCanvas";
+
+FastCanvas* FaderRenderer::fastCanvas() const
+{
+  return iFastCanvas;
+}
+
+FaderRenderer& FaderRenderer::setFastCanvas(FastCanvas* aFastCanvas)
+{
+  if (!(iFastCanvas == aFastCanvas))
+  {
+    iFastCanvas = aFastCanvas;
+    notifyObservers(INotificationEvent(FaderRenderer::fastCanvasId, *this));
+  } // endif
+  return *this;
+}
+
+// Feature source code generation ends here.
+
+
+// Feature source code generation begins here...
+INotificationId FaderRenderer::numPaletteEntriesId = "FaderRenderer::numPaletteEntries";
+INotificationId FaderRenderer::paletteId = "FaderRenderer::palette";
+
+int FaderRenderer::numPaletteEntries() const
+{
+  return iNumPaletteEntries;
+}
+
+FaderRenderer& FaderRenderer::setNumPaletteEntries(int aNumPaletteEntries)
+{
+  if (!(iNumPaletteEntries == aNumPaletteEntries))
+  {
+    iNumPaletteEntries = aNumPaletteEntries;
+    notifyObservers(INotificationEvent(FaderRenderer::numPaletteEntriesId, *this));
+  } // endif
+  return *this;
+}
+
+RGB2 const* FaderRenderer::palette() const
+{
+  return iPalette;
+}
+
+FaderRenderer& FaderRenderer::setPalette(RGB2 const* aPalette)
+{
+  if (!(iPalette == aPalette))
+  {
+    iPalette = aPalette;
+    notifyObservers(INotificationEvent(FaderRenderer::paletteId, *this));
+  } // endif
+  return *this;
+}
+
+// Feature source code generation ends here.
+
+
+

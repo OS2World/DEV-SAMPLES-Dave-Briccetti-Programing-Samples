@@ -1,0 +1,10 @@
+public:
+
+#include "Star.inl"
+
+private:
+   void userConstructor (ISize const & modelSpaceSize, int numDistances);
+   void userDestructor();
+
+
+

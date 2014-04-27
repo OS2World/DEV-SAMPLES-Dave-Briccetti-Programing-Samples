@@ -1,0 +1,39 @@
+
+
+// Feature source code generation begins here...
+public:
+  virtual IVSequence<Sprite*>* spriteSequence() const;
+  virtual SpriteCommander& advanceFrame(int numFrames);
+  virtual SpriteCommander& setSpriteSequence(IVSequence<Sprite*>* aSpriteSequence);
+  virtual SpriteCommander& move(IPoint const& offset);
+  virtual SpriteCommander& moveFast(IPoint const& offset);
+  virtual int selectedSpriteNumber() const;
+  virtual SpriteCommander& setSelectedSpriteNumber(int aSelectedSpriteNumber);
+  virtual FastCanvas* fastCanvas() const;
+  virtual SpriteCommander& setFastCanvas(FastCanvas* aFastCanvas);
+  virtual IPoint fastMovementMultiplier() const;
+  virtual SpriteCommander& setFastMovementMultiplier(const IPoint& aFastMovementMultiplier);
+
+  static INotificationId spriteSequenceId;
+  static INotificationId selectedSpriteNumberId;
+  static INotificationId fastCanvasId;
+  static INotificationId fastMovementMultiplierId;
+
+private:
+  IVSequence<Sprite*>* iSpriteSequence;
+// Feature source code generation ends here.
+
+
+// Feature source code generation ends here.
+
+private:
+  Sprite & selectedSprite () const;
+
+
+
+// Feature source code generation begins here...
+private:
+  int iSelectedSpriteNumber;
+  FastCanvas* iFastCanvas;
+  IPoint iFastMovementMultiplier;
+

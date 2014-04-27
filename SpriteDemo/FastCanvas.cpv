@@ -1,0 +1,287 @@
+// Feature source code generation begins here...
+INotificationId FastCanvas::spriteSequenceId = "FastCanvas::spriteSequence";
+INotificationId FastCanvas::bufferId = "FastCanvas::buffer";
+
+IVSequence<Sprite*>* FastCanvas::spriteSequence() const
+{
+  return iSpriteSequence;
+}
+
+FastCanvas& FastCanvas::setSpriteSequence(IVSequence<Sprite*>* aSpriteSequence)
+{
+  if (!(iSpriteSequence == aSpriteSequence))
+  {
+    iSpriteSequence = aSpriteSequence;
+    notifyObservers(INotificationEvent(FastCanvas::spriteSequenceId, *this));
+  } // endif
+  return *this;
+}
+
+char* FastCanvas::buffer() const
+{
+  return iBuffer;
+}
+
+// Feature source code generation ends here.
+
+
+
+FastCanvas& FastCanvas::clear()
+{
+   IASSERTSTATE (bufferSize);
+   memset (iBuffer, 0, bufferSize);
+   return *this;
+}
+
+static IBoolean drawSprite (Sprite*& sprite, void * pv)
+{
+   IASSERTSTATE (sprite);
+   sprite->draw();
+   return True;
+}
+
+FastCanvas& FastCanvas::draw()
+{
+   IFUNCTRACE_DEVELOP();
+   IASSERTSTATE (hdive);
+   IASSERTSTATE (ulDiveImage);
+   IASSERTSTATE (iSpriteSequence);
+
+   clear ();
+   iSpriteSequence->allElementsDo (drawSprite, 0);
+   DiveBlitImage( hdive, ulDiveImage, DIVE_BUFFER_SCREEN );
+
+   return *this;
+}
+
+FastCanvas& FastCanvas::prepare()
+{
+   IFUNCTRACE_DEVELOP();
+   IASSERTSTATE (hdive == 0);  // Only one prepare allowed
+
+   confirmDIVECapabilities ();
+
+   ULONG rc = DiveOpen ( &hdive, FALSE, 0 );
+   if (rc != DIVE_SUCCESS)
+   {
+      IString msg ("DiveOpen failed: " + IString(rc));
+      IAccessError err (msg);
+      ITHROW (err);
+   }
+
+   ISize sizeWindow = size();
+   bufferSize = sizeWindow.width() * sizeWindow.height();
+   IASSERTSTATE (bufferSize);
+
+   rc = DosAllocMem ( (PPVOID)&iBuffer,
+                        bufferSize,
+                        PAG_COMMIT | PAG_EXECUTE | PAG_READ | PAG_WRITE );
+   if (rc != NO_ERROR)
+      ITHROWSYSTEMERROR (rc, "DosAllocMem",
+         IErrorInfo::accessError, IException::unrecoverable);
+
+   rc = DiveAllocImageBuffer ( hdive,
+                               &ulDiveImage,
+                               FOURCC_LUT8,
+                               sizeWindow.width(),
+                               sizeWindow.height(),
+                               0,
+                               (PBYTE) iBuffer);
+   if (rc != DIVE_SUCCESS)
+   {
+      IString msg ("DiveAllocImageBuffer failed: " + IString(rc));
+      IAccessError err (msg);
+      ITHROW (err);
+   }
+
+   // Create a mutex semaphore for serializing access to video buffers.
+   //
+   rc = DosCreateMutexSem( (PSZ)NULL,
+                      &mtxVideoBufferAccess,
+                      0UL,
+                      FALSE );
+   if (rc != NO_ERROR)
+      ITHROWSYSTEMERROR (rc, "DosCreateMutexSem",
+         IErrorInfo::accessError, IException::unrecoverable);
+
+   pdiveBlitterHandler = new DiveBlitterHandler (hdive);
+   IASSERTSTATE (pdiveBlitterHandler);
+   pdiveBlitterHandler->handleEventsFor (this);
+
+   pdivePaintHandler = new DivePaintHandler (hdive);
+   IASSERTSTATE (pdivePaintHandler);
+   pdivePaintHandler->handleEventsFor (this);
+
+   WinSetVisibleRegionNotify (handle(), TRUE);
+   WinSendMsg (handle(), WM_VRNENABLED, MPFROMLONG (TRUE), 0);
+
+   return *this;
+}
+
+FastCanvas& FastCanvas::destroy()
+{
+   IASSERTSTATE (iBuffer);
+   DosFreeMem (iBuffer);
+   return *this;
+}
+
+
+FastCanvas& FastCanvas::initializeMemberData()
+{
+   pdiveBlitterHandler  = 0;
+   pdivePaintHandler    = 0;
+   hdive                = 0;
+   ulDiveImage          = 0;
+   mtxVideoBufferAccess = 0;
+   bufferSize           = 0;
+
+   return *this;
+}
+
+
+FastCanvas& FastCanvas::confirmDIVECapabilities()
+{
+   DIVE_CAPS DiveCaps = {0};
+   FOURCC    fccFormats[100] = {0};        // Color format code
+
+   // Get the screen capabilities, and if the system support only 16 colors
+   // the sample should be terminated.
+   //
+   DiveCaps.pFormatData = fccFormats;
+   DiveCaps.ulFormatLength = sizeof fccFormats;
+   DiveCaps.ulStructLen = sizeof(DIVE_CAPS);
+
+   ULONG rc = DiveQueryCaps ( &DiveCaps, DIVE_BUFFER_SCREEN );
+   if (rc != DIVE_SUCCESS)
+   {
+      IString msg ("DiveQueryCaps failed: " + IString(rc));
+      IAccessError err (msg);
+      ITHROW (err);
+   }
+
+   if ( DiveCaps.ulDepth < 8 )
+   {
+      IAccessError errDiveOpen
+         ("This program requires a color depth of at least 8 bits.");
+      ITHROW (errDiveOpen);
+   }
+
+   return *this;
+}
+
+
+FastCanvas::DiveBlitterHandler::DiveBlitterHandler (HDIVE ahdive) :
+   IHandler (), hdive (ahdive)
+{
+}
+
+Boolean FastCanvas::DiveBlitterHandler::dispatchHandlerEvent(IEvent& event)
+{
+   switch (event.eventId())
+   {
+      case WM_VRNDISABLED:
+         ITRACE_DEVELOP("WM_VRNDISABLED");
+         DiveSetupBlitter ( hdive, 0 );
+         event.setResult (0);
+         return True;
+
+      case WM_VRNENABLED:
+         ITRACE_DEVELOP("WM_VRNENABLED");
+         setUpDiveBlitter (*event.dispatchingWindow());
+         FastCanvas * const canvas = (FastCanvas *) event.dispatchingWindow();
+         canvas->draw();
+         event.setResult (0);
+         return True;
+   }
+
+   return False;
+}
+
+void FastCanvas::DiveBlitterHandler::setUpDiveBlitter (IWindow & iwnd)
+{
+   IFUNCTRACE_DEVELOP();
+   IWindowHandle hwnd = iwnd.handle();
+
+   HPS hps = WinGetPS (hwnd);
+   if (hps == 0)
+      ITHROWGUIERROR ("WinGetPS");
+   HRGN const hrgn = GpiCreateRegion (hps, 0L, 0);
+   if (hrgn == RGN_ERROR)
+      ITHROWGUIERROR ("GpiCreateRegion");
+
+   ULONG const ulrgnrc = WinQueryVisibleRegion (hwnd, hrgn);
+   if (ulrgnrc == RGN_ERROR)
+      ITHROWGUIERROR ("WinQueryVisibleRegion");
+
+   static int const maxVisibleRectangles = 50;
+   RECTL   arclVisible [maxVisibleRectangles];
+   RGNRECT rgnCtl = {0};
+   rgnCtl.ircStart     = 0;
+   rgnCtl.crc          = maxVisibleRectangles;
+   rgnCtl.ulDirection  = 1;
+
+   BOOL fOK = GpiQueryRegionRects (hps, hrgn, NULL, &rgnCtl, arclVisible);
+   if (! fOK)
+      ITHROWGUIERROR ("GpiQueryRegionRects");
+
+   fOK = GpiDestroyRegion (hps, hrgn);
+   if (! fOK)
+      ITHROWGUIERROR ("GpiDestroyRegion");
+
+   fOK = WinReleasePS( hps );
+   if (! fOK)
+      ITHROWGUIERROR ("WinReleasePS");
+
+   ULONG rc = DiveSetupBlitter ( hdive, 0 );
+   if (rc != DIVE_SUCCESS)
+   {
+      IString msg ("DiveSetupBlitter failed: " + IString(rc));
+      IAccessError err (msg);
+      ITHROW (err);
+   }
+
+   SETUP_BLITTER SetupBlitter = {0};
+   SetupBlitter.ulStructLen = sizeof SetupBlitter;
+   SetupBlitter.fInvert           = FALSE;
+   SetupBlitter.ulDitherType      = 1;
+
+   SetupBlitter.fccSrcColorFormat = FOURCC_LUT8;
+   SetupBlitter.ulSrcWidth        = iwnd.size().width();
+   SetupBlitter.ulSrcHeight       = iwnd.size().height();
+
+   SetupBlitter.fccDstColorFormat = FOURCC_SCRN;
+   SetupBlitter.ulDstWidth        = iwnd.size().width();
+   SetupBlitter.ulDstHeight       = iwnd.size().height();
+
+   POINTL ptlBottomLeft = {0};
+   WinMapWindowPoints (hwnd, HWND_DESKTOP, &ptlBottomLeft, 1);
+   SetupBlitter.lScreenPosX   = ptlBottomLeft.x;
+   SetupBlitter.lScreenPosY   = ptlBottomLeft.y;
+
+   SetupBlitter.ulNumDstRects = rgnCtl.crcReturned;
+   SetupBlitter.pVisDstRects  = arclVisible;
+
+   rc = DiveSetupBlitter (hdive, &SetupBlitter);
+   if (rc != DIVE_SUCCESS)
+   {
+      IString msg ("DiveSetupBlitter failed: " + IString(rc));
+      IAccessError err (msg);
+      ITHROW (err);
+   }
+}
+
+
+FastCanvas::DivePaintHandler::DivePaintHandler (HDIVE ahdive) :
+   IPaintHandler (), hdive (ahdive)
+{
+}
+
+
+Boolean FastCanvas::DivePaintHandler::paintWindow(IPaintEvent& event)
+{
+   IFUNCTRACE_DEVELOP();
+   ((FastCanvas *)event.dispatchingWindow())->draw();
+   return True;
+}
+
+

@@ -1,0 +1,58 @@
+#include "InterfaceEnabler.h"
+
+#include "InterfaceEnabler.h"
+
+#include <os2.h>
+
+#ifndef MAIN_RESOURCES_INCLUDED
+/*------------------------------ Main Resources ------------------------------*/
+#define MAIN_RESOURCES_INCLUDED
+
+HELPTABLE WND_InterfaceEnabler
+   BEGIN
+   END
+
+#define InterfaceEnabler_WINDOWRESOURCES
+#define InterfaceEnabler_NONWINDOWRESOURCES
+STRINGTABLE
+   BEGIN
+      1,  "Visual Builder 3.0"
+   END
+
+#endif
+
+#ifdef InterfaceEnabler_NONWINDOWRESOURCES
+/*--------------------- Non-Window ID Related Resources ----------------------*/
+#ifndef InterfaceEnabler_NONWINDOWRESOURCES_INCLUDED
+#define InterfaceEnabler_NONWINDOWRESOURCES_INCLUDED
+#endif
+#endif
+
+#ifdef InterfaceEnabler_WINDOWRESOURCES
+/*----------------------- Window ID Related Resources ------------------------*/
+#ifdef InterfaceEnabler_WINDOWRESOURCES_INCLUDING
+#define InterfaceEnabler_WINDOWRESOURCES_RECURSING
+#endif
+#define InterfaceEnabler_WINDOWRESOURCES_INCLUDING
+
+#ifndef InterfaceEnabler_WINDOWRESOURCES_RECURSING
+
+#undef InterfaceEnabler_WINDOWRESOURCES_INCLUDING
+#endif
+#endif
+
+#ifdef InterfaceEnabler_HELPITEMRESOURCES
+/*--------------------------- Help Item Resources ----------------------------*/
+#ifdef InterfaceEnabler_HELPITEMRESOURCES_INCLUDING
+#define InterfaceEnabler_HELPITEMRESOURCES_RECURSING
+#endif
+#define InterfaceEnabler_HELPITEMRESOURCES_INCLUDING
+#ifndef InterfaceEnabler_HELPITEMRESOURCES_RECURSING
+
+#endif
+#endif
+
+#ifdef InterfaceEnabler_HELPSUBITEMRESOURCES
+/*-------------------------- Help Subitem Resources --------------------------*/
+#endif
+

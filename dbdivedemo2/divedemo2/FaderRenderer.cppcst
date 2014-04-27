@@ -1,0 +1,43 @@
+void FaderRenderer::userConstructor()
+{
+   static int const numEntries = 64;
+   static RGB2 argb2 [numEntries] = {0};
+
+   for (int i = 0; i < numEntries; ++i)
+      argb2[i].bBlue = i * 4;
+
+   setNumPaletteEntries (numEntries);
+   setPalette (argb2);
+}
+
+void FaderRenderer::render()
+{
+   IFUNCTRACE_DEVELOP();
+   FastCanvas & canvas = *fastCanvas();
+   PCHAR pLine =  canvas.buffer();
+   UINT const cx = canvas.bufferSize().width();
+   UINT const cy = canvas.size().height();
+   static int paletteOffset;
+   static int paletteDelta = 1;
+
+   memset (pLine, paletteOffset, cx * cy);
+
+   if (canvas.isAnimationRunning())
+   {
+      paletteOffset += paletteDelta;
+
+      if (paletteOffset > iNumPaletteEntries - 1)
+      {
+         paletteOffset = iNumPaletteEntries - 2;
+         paletteDelta = -1;
+      }
+      else
+         if (paletteOffset < 0)
+         {
+            paletteOffset = 1;
+            paletteDelta = 1;
+         }
+   }
+}
+
+

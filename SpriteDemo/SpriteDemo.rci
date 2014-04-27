@@ -1,0 +1,212 @@
+#include "SpriteDemo.h"
+
+#include "SpriteDemo.h"
+
+#include <os2.h>
+
+#ifndef MAIN_RESOURCES_INCLUDED
+/*------------------------------ Main Resources ------------------------------*/
+#define MAIN_RESOURCES_INCLUDED
+
+HELPTABLE WND_SpriteDemo
+   BEGIN
+      HELPITEM  WND_SpriteDemo_FrameWindow,  WND_SpriteDemo_FrameWindow,  0
+#define SpriteDemo_SpriteDetails_Temp  WND_SpriteDetails
+#define SpriteDemo_FastCanvas_Temp  WND_FastCanvas
+
+      #ifndef SpriteDemo_SpriteDetails_HELPITEMRESOURCES_INCLUDED
+      #define SpriteDetails_HELPITEMRESOURCES
+      #undef WND_SpriteDetails
+      #define WND_SpriteDetails  WND_SpriteDemo_SpriteDetails
+      #define SpriteDemo_SpriteDetails_HELPITEMRESOURCES_INCLUDED
+      #include "SpriteDetails.rci"
+      #undef WND_SpriteDetails
+      #define WND_SpriteDetails  SpriteDemo_SpriteDetails_Temp
+      #undef SpriteDetails_HELPITEMRESOURCES
+      #endif
+
+      #ifndef SpriteDemo_FastCanvas1_HELPITEMRESOURCES_INCLUDED
+      #define FastCanvas_HELPITEMRESOURCES
+      #undef WND_FastCanvas
+      #define WND_FastCanvas  WND_SpriteDemo_FastCanvas1
+      #define SpriteDemo_FastCanvas1_HELPITEMRESOURCES_INCLUDED
+      #include "FastCanvas.rci"
+      #undef WND_FastCanvas
+      #define WND_FastCanvas  SpriteDemo_FastCanvas_Temp
+      #undef FastCanvas_HELPITEMRESOURCES
+      #endif
+   END
+
+#define SpriteDemo_WINDOWRESOURCES
+#define SpriteDemo_NONWINDOWRESOURCES
+STRINGTABLE
+   BEGIN
+      1,  "Visual Builder 3.0"
+   END
+
+#endif
+
+#ifdef SpriteDemo_NONWINDOWRESOURCES
+/*--------------------- Non-Window ID Related Resources ----------------------*/
+#ifndef SpriteDemo_NONWINDOWRESOURCES_INCLUDED
+#define SpriteDemo_NONWINDOWRESOURCES_INCLUDED
+#ifndef SpriteDetails_NONWINDOWRESOURCES_INCLUDED
+#define SpriteDetails_NONWINDOWRESOURCES
+#include "SpriteDetails.rci"
+#undef SpriteDetails_NONWINDOWRESOURCES
+#endif
+
+#ifndef FastCanvas_NONWINDOWRESOURCES_INCLUDED
+#define FastCanvas_NONWINDOWRESOURCES
+#include "FastCanvas.rci"
+#undef FastCanvas_NONWINDOWRESOURCES
+#endif
+
+#ifndef SpriteCommander_NONWINDOWRESOURCES_INCLUDED
+#define SpriteCommander_NONWINDOWRESOURCES
+#include "SpriteCommander.rci"
+#undef SpriteCommander_NONWINDOWRESOURCES
+#endif
+
+#ifndef SpriteDropHandler_NONWINDOWRESOURCES_INCLUDED
+#define SpriteDropHandler_NONWINDOWRESOURCES
+#include "SpriteDropHandler.rci"
+#undef SpriteDropHandler_NONWINDOWRESOURCES
+#endif
+
+#ifndef InterfaceEnabler_NONWINDOWRESOURCES_INCLUDED
+#define InterfaceEnabler_NONWINDOWRESOURCES
+#include "InterfaceEnabler.rci"
+#undef InterfaceEnabler_NONWINDOWRESOURCES
+#endif
+
+#endif
+#endif
+
+#ifdef SpriteDemo_WINDOWRESOURCES
+/*----------------------- Window ID Related Resources ------------------------*/
+#ifdef SpriteDemo_WINDOWRESOURCES_INCLUDING
+#define SpriteDemo_WINDOWRESOURCES_RECURSING
+#endif
+#define SpriteDemo_WINDOWRESOURCES_INCLUDING
+ACCELTABLE (ACCEL_SpriteDemo_FrameWindow)
+   BEGIN
+      "O",  WND_SpriteDemo_openMenuItem,  CHAR,  CONTROL
+      "o",  WND_SpriteDemo_openMenuItem,  CHAR,  CONTROL
+      VK_F3,  WND_SpriteDemo_exitMenuItem,  VIRTUALKEY
+      "-",  WND_SpriteDemo_previousFrameMenuItem,  CHAR
+      "+",  WND_SpriteDemo_nextFrameMenuItem,  CHAR
+      "R",  WND_SpriteDemo_moveRight,  CHAR
+      "r",  WND_SpriteDemo_moveRight,  CHAR
+      "L",  WND_SpriteDemo_MenuItem3,  CHAR
+      "l",  WND_SpriteDemo_MenuItem3,  CHAR
+      "U",  WND_SpriteDemo_upMenuItem,  CHAR
+      "u",  WND_SpriteDemo_upMenuItem,  CHAR
+      "D",  WND_SpriteDemo_downMenuItem,  CHAR
+      "d",  WND_SpriteDemo_downMenuItem,  CHAR
+      "R",  WND_SpriteDemo_MenuItem1,  CHAR,  CONTROL
+      "r",  WND_SpriteDemo_MenuItem1,  CHAR,  CONTROL
+      "L",  WND_SpriteDemo_MenuItem11,  CHAR,  CONTROL
+      "l",  WND_SpriteDemo_MenuItem11,  CHAR,  CONTROL
+      "U",  WND_SpriteDemo_FastUpMenuItem,  CHAR,  CONTROL
+      "u",  WND_SpriteDemo_FastUpMenuItem,  CHAR,  CONTROL
+      "D",  WND_SpriteDemo_FastDownMenuItem,  CHAR,  CONTROL
+      "d",  WND_SpriteDemo_FastDownMenuItem,  CHAR,  CONTROL
+   END
+HELPSUBTABLE (WND_SpriteDemo_FrameWindow)
+   BEGIN
+
+      #define SpriteDetails_HELPSUBITEMRESOURCES
+      #undef WND_SpriteDetails
+      #define WND_SpriteDetails  WND_SpriteDemo_SpriteDetails
+      #include "SpriteDetails.rci"
+      #undef SpriteDetails_HELPSUBITEMRESOURCES
+
+      #define FastCanvas_HELPSUBITEMRESOURCES
+      #undef WND_FastCanvas
+      #define WND_FastCanvas  WND_SpriteDemo_FastCanvas1
+      #include "FastCanvas.rci"
+      #undef FastCanvas_HELPSUBITEMRESOURCES
+   END
+
+STRINGTABLE
+   BEGIN
+      STRRC_SpriteDemo_SpriteDetails_avlFlyOverLongText,  "You may drag GFI files into this window"
+      STRRC_SpriteDemo_SpriteDetails_avlFlyOverShortText,  "Details of loaded sprites appear here"
+      STRRC_SpriteDemo_FastCanvas1_avlFlyOverLongText,  "Sprites from GFI files you load or drag in appear here"
+      STRRC_SpriteDemo_FastCanvas1_avlFlyOverShortText,  "Sprites appear in this window"
+      STRRC_SpriteDemo_FileMenuCascade_avlInfoAreaText,  "Open Graphics File Information (GFI) files"
+      STRRC_SpriteDemo_FrameMenuCascade_avlInfoAreaText,  "Display different frames from the sprite"
+      STRRC_SpriteDemo_MoveMenuCascade_avlInfoAreaText,  "Move the sprite"
+   END
+
+#ifndef SpriteDemo_WINDOWRESOURCES_RECURSING
+#define SpriteDemo_SpriteDetails_Temp  WND_SpriteDetails
+#define SpriteDemo_FastCanvas_Temp  WND_FastCanvas
+
+#ifndef SpriteDemo_SpriteDetails_WINDOWRESOURCES_INCLUDED
+#define SpriteDemo_SpriteDetails_WINDOWRESOURCES_INCLUDED
+#define SpriteDetails_WINDOWRESOURCES
+#undef WND_SpriteDetails
+#define WND_SpriteDetails  WND_SpriteDemo_SpriteDetails
+#include "SpriteDetails.rci"
+#undef WND_SpriteDetails
+#define WND_SpriteDetails  SpriteDemo_SpriteDetails_Temp
+#undef SpriteDetails_WINDOWRESOURCES
+#endif
+
+#ifndef SpriteDemo_FastCanvas1_WINDOWRESOURCES_INCLUDED
+#define SpriteDemo_FastCanvas1_WINDOWRESOURCES_INCLUDED
+#define FastCanvas_WINDOWRESOURCES
+#undef WND_FastCanvas
+#define WND_FastCanvas  WND_SpriteDemo_FastCanvas1
+#include "FastCanvas.rci"
+#undef WND_FastCanvas
+#define WND_FastCanvas  SpriteDemo_FastCanvas_Temp
+#undef FastCanvas_WINDOWRESOURCES
+#endif
+
+#undef SpriteDemo_WINDOWRESOURCES_INCLUDING
+#endif
+#endif
+
+#ifdef SpriteDemo_HELPITEMRESOURCES
+/*--------------------------- Help Item Resources ----------------------------*/
+#ifdef SpriteDemo_HELPITEMRESOURCES_INCLUDING
+#define SpriteDemo_HELPITEMRESOURCES_RECURSING
+#endif
+#define SpriteDemo_HELPITEMRESOURCES_INCLUDING
+      HELPITEM  WND_SpriteDemo_FrameWindow,  WND_SpriteDemo_FrameWindow,  0
+#ifndef SpriteDemo_HELPITEMRESOURCES_RECURSING
+
+#define SpriteDemo_SpriteDetails_Temp  WND_SpriteDetails
+#define SpriteDemo_FastCanvas_Temp  WND_FastCanvas
+
+      #ifndef SpriteDemo_SpriteDetails_HELPITEMRESOURCES_INCLUDED
+      #define SpriteDetails_HELPITEMRESOURCES
+      #undef WND_SpriteDetails
+      #define WND_SpriteDetails  WND_SpriteDemo_SpriteDetails
+      #define SpriteDemo_SpriteDetails_HELPITEMRESOURCES_INCLUDED
+      #include "SpriteDetails.rci"
+      #undef WND_SpriteDetails
+      #define WND_SpriteDetails  SpriteDemo_SpriteDetails_Temp
+      #undef SpriteDetails_HELPITEMRESOURCES
+      #endif
+
+      #ifndef SpriteDemo_FastCanvas1_HELPITEMRESOURCES_INCLUDED
+      #define FastCanvas_HELPITEMRESOURCES
+      #undef WND_FastCanvas
+      #define WND_FastCanvas  WND_SpriteDemo_FastCanvas1
+      #define SpriteDemo_FastCanvas1_HELPITEMRESOURCES_INCLUDED
+      #include "FastCanvas.rci"
+      #undef WND_FastCanvas
+      #define WND_FastCanvas  SpriteDemo_FastCanvas_Temp
+      #undef FastCanvas_HELPITEMRESOURCES
+      #endif
+#endif
+#endif
+
+#ifdef SpriteDemo_HELPSUBITEMRESOURCES
+/*-------------------------- Help Subitem Resources --------------------------*/
+#endif
+

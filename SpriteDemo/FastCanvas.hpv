@@ -1,0 +1,63 @@
+
+// Feature source code generation begins here...
+public:
+  virtual char* buffer() const;
+  virtual IVSequence<Sprite*>* spriteSequence() const;
+  virtual FastCanvas& setSpriteSequence(IVSequence<Sprite*>* aSpriteSequence);
+  virtual FastCanvas& prepare();
+  virtual FastCanvas& clear();
+  virtual FastCanvas& draw();
+
+  static INotificationId spriteSequenceId;
+  static INotificationId bufferId;
+
+private:
+  IVSequence<Sprite*>* iSpriteSequence;
+  char* iBuffer;
+// Feature source code generation ends here.
+
+private:
+
+class DiveBlitterHandler : public IHandler
+{
+   public:
+
+   DiveBlitterHandler (HDIVE ahdive);
+
+   Boolean dispatchHandlerEvent(IEvent& event);
+
+   void setUpDiveBlitter (IWindow & iwnd);
+
+   private:
+
+   HDIVE hdive;
+};
+
+class DivePaintHandler : public IPaintHandler
+{
+   public:
+
+   DivePaintHandler (HDIVE ahdive);
+
+   Boolean paintWindow(IPaintEvent& event);
+
+   private:
+
+   HDIVE hdive;
+};
+
+   // Update initializeMemberData() after making changes here
+
+   FastCanvas& destroy();
+   FastCanvas& initializeMemberData();
+   FastCanvas& confirmDIVECapabilities();
+
+   DiveBlitterHandler * pdiveBlitterHandler;
+   DivePaintHandler   * pdivePaintHandler;
+   HDIVE hdive;
+   ULONG ulDiveImage;
+   HMTX  mtxVideoBufferAccess;                        // used to serialize buffer access
+   unsigned int bufferSize;
+
+
+

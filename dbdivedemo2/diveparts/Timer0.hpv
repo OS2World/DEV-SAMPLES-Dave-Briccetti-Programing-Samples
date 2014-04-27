@@ -1,0 +1,27 @@
+private:
+   void userConstructor ();
+   void userDestructor ();
+   HFILE hfTimer;
+   ULONG const * pulTimer;
+
+protected:
+
+// Feature source code generation begins here...
+public:
+  virtual ULONG time() const;
+  void delayFor(ULONG milliseconds);
+
+  static INotificationId timeId;
+
+private:
+  ULONG iTime;
+// Feature source code generation ends here.
+
+
+// Feature source code generation begins here...
+public:
+  void delayUntil(ULONG aTimerValue);
+
+
+// Feature source code generation ends here.
+

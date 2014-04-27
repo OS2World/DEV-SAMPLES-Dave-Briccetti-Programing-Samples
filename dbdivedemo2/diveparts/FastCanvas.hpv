@@ -1,0 +1,61 @@
+#include "FastCanvas.hppcst"
+
+
+
+// Feature source code generation begins here...
+public:
+  virtual FastCanvas& setDiveHandle(HDIVE aDiveHandle);
+  virtual DiveImageRenderer* diveImageRenderer() const;
+  virtual FastCanvas& setDiveImageRenderer(DiveImageRenderer* aDiveImageRenderer);
+  virtual float drawFrequencyRequestedFPS();
+  virtual FastCanvas& setDrawFrequencyRequestedFPS(float aDrawFrequencyRequestedFPS);
+  virtual float drawFrequencyActualFPS();
+  virtual FastCanvas& setDrawFrequencyActualFPS(float aDrawFrequencyActualFPS);
+  virtual ULONG systemTimerIntervalMillisecondTenths() const;
+  virtual FastCanvas& setSystemTimerIntervalMillisecondTenths(ULONG aSystemTimerIntervalMillisecondTenths);
+  virtual FastCanvas& enableAnimationRunning(Boolean enable = true);
+  virtual IApplication::PriorityClass priorityClass() const;
+  virtual FastCanvas& setPriorityClass(IApplication::PriorityClass aPriorityClass);
+  virtual Boolean isVisibleRegionEnabled() const;
+  virtual FastCanvas& enableVisibleRegionEnabled(Boolean enable = true);
+  virtual FastCanvas& clear();
+  virtual FastCanvas& draw();
+  virtual void userConstructor();
+  virtual void userDestructor();
+
+  static INotificationId bufferId;
+  static INotificationId diveHandleId;
+  static INotificationId bufferSizeId;
+  static INotificationId diveImageRendererId;
+  static INotificationId drawFrequencyRequestedFPSId;
+  static INotificationId drawFrequencyActualFPSId;
+  static INotificationId systemTimerIntervalMillisecondTenthsId;
+  static INotificationId animationRunningId;
+  static INotificationId priorityClassId;
+  static INotificationId visibleRegionEnabledId;
+
+private:
+  char* iBuffer;
+  HDIVE iDiveHandle;
+  ISize iBufferSize;
+  DiveImageRenderer* iDiveImageRenderer;
+  float iDrawFrequencyRequestedFPS;
+  float iDrawFrequencyActualFPS;
+  ULONG iSystemTimerIntervalMillisecondTenths;
+  Boolean iAnimationRunning;
+  IApplication::PriorityClass iPriorityClass;
+  Boolean iVisibleRegionEnabled;
+// Feature source code generation ends here.
+
+
+
+
+// Feature source code generation begins here...
+public:
+  virtual ULONG colorDepth() const;
+
+  static INotificationId colorDepthId;
+
+private:
+  ULONG iColorDepth;
+// Feature source code generation ends here.

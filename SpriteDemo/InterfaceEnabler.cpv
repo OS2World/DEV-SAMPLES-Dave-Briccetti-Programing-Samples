@@ -1,0 +1,29 @@
+
+
+// Feature source code generation begins here...
+INotificationId InterfaceEnabler::numberOfSpritesId = "InterfaceEnabler::numberOfSprites";
+INotificationId InterfaceEnabler::interfaceNeedsEnablingId = "InterfaceEnabler::interfaceNeedsEnabling";
+INotificationId InterfaceEnabler::interfaceNeedsDisablingId = "InterfaceEnabler::interfaceNeedsDisabling";
+
+unsigned long InterfaceEnabler::numberOfSprites() const
+{
+  return iNumberOfSprites;
+}
+
+InterfaceEnabler& InterfaceEnabler::setNumberOfSprites(unsigned long aNumberOfSprites)
+{
+  if (!(iNumberOfSprites == aNumberOfSprites))
+  {
+    iNumberOfSprites = aNumberOfSprites;
+    notifyObservers(INotificationEvent(InterfaceEnabler::numberOfSpritesId, *this));
+
+    if (iNumberOfSprites == 0)
+      notifyObservers(INotificationEvent(InterfaceEnabler::interfaceNeedsDisablingId, *this));
+    else
+      notifyObservers(INotificationEvent(InterfaceEnabler::interfaceNeedsEnablingId, *this));
+
+  } // endif
+  return *this;
+}
+
+// Feature source code generation ends here.

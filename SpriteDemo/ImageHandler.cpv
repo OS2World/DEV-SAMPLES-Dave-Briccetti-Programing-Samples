@@ -1,0 +1,78 @@
+
+// Feature source code generation begins here...
+INotificationId ImageHandler::numFramesId = "ImageHandler::numFrames";
+INotificationId ImageHandler::sizeId = "ImageHandler::size";
+INotificationId ImageHandler::bufferSizeId = "ImageHandler::bufferSize";
+INotificationId ImageHandler::paletteBufferId = "ImageHandler::paletteBuffer";
+INotificationId ImageHandler::imageBufferId = "ImageHandler::imageBuffer";
+
+unsigned int ImageHandler::numFrames() const
+{
+  return iNumFrames;
+}
+
+ISize ImageHandler::size() const
+{
+  return iSize;
+}
+
+unsigned int ImageHandler::bufferSize() const
+{
+  return iBufferSize;
+}
+
+PcxLoader* ImageHandler::pcxLoader() const
+{
+  return iPcxLoader;
+}
+
+unsigned char* ImageHandler::paletteBuffer() const
+{
+  return iPaletteBuffer;
+}
+
+unsigned char* ImageHandler::imageBuffer() const
+{
+  return iImageBuffer;
+}
+
+unsigned char const* ImageHandler::accessImage(unsigned int frameIndex)
+{
+   return iImageBuffer + frameIndex * iBufferSize;
+}
+
+ImageHandler& ImageHandler::setNumFrames(unsigned int aNumFrames)
+{
+  if (!(iNumFrames == aNumFrames))
+  {
+    iNumFrames = aNumFrames;
+    notifyObservers(INotificationEvent(ImageHandler::numFramesId, *this));
+  } // endif
+  return *this;
+}
+
+// Feature source code generation ends here.
+
+
+ImageHandler& ImageHandler::load(IString const& fileName, unsigned int numFrames)
+{
+   PcxLoader pcxLoader;
+   pcxLoader.loadFile (fileName);
+   iSize = ISize (pcxLoader.imageWidth(), pcxLoader.imageHeight() / numFrames);
+   setNumFrames (numFrames);
+   iBufferSize = iSize.width() * iSize.height();
+
+   iImageBuffer = new unsigned char [pcxLoader.imageSize()];
+   assert (iImageBuffer);
+
+   iPaletteBuffer = new unsigned char [3 * 256];
+   assert (iPaletteBuffer);
+
+   pcxLoader.getPalette (iPaletteBuffer);
+   pcxLoader.getImage (iImageBuffer);
+
+   return *this;
+}
+
+
+

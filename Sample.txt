@@ -1,0 +1,78 @@
+/* Split Canvas sample program - Dave Briccetti (daveb@davebsoft.com), Dec. 1994
+
+   +-------+-----+
+   | MLE   | Bit |  This program shows two MLE-type windows on the top and
+   |       | map |  bottom parts of the left side of the window, and a
+   +-------+     |  bitmap on the right side.  It uses two split canvases:
+   | MLE   |     |  one split vertically, and a smaller one split horizontally.
+   +-------+-----+
+*/
+
+#include &ltiframe.hpp>                       // Frame
+#include &ltisplitcv.hpp>                     // Split canvas
+#include &ltimle.hpp>                         // Multi-line Edit
+#include &ltibmpctl.hpp>                      // Bitmap
+#include &ltifont.hpp>                        // Fonts
+
+#include "ids.h"                            // Resources and window ids
+
+class SourceDisplayMle : public IMultiLineEdit
+{
+    public:
+        SourceDisplayMle (unsigned long id, IWindow* parent,
+            IWindow* owner, char * pszFile);
+};
+
+
+void main()
+{
+    IFrameWindow frame                      // Create frame window
+        ("Programming Tip -- Split Canvas");
+    ISplitCanvas canvasFull                 // Create full canvas (frame child)
+        (ID_CANVASFULL, &frame, &frame);
+    ISplitCanvas canvasLeft                 // Create left side canvas
+        (ID_CANVASLEFT, &canvasFull, &canvasFull);
+    canvasLeft.setOrientation               // Make it split horizontally
+        (ISplitCanvas::horizontalSplit);
+    frame.setClient (&canvasFull);          // Make full canvas client of frame
+
+    SourceDisplayMle mleSourceCode          // Create source display control
+        (ID_MLESOURCECODE, &canvasLeft,     //   for C++ program
+        &canvasLeft, "spltsamp.cpp");
+    SourceDisplayMle mleResourceFile        // Create source display control
+        (ID_MLERESOURCEFILE, &canvasLeft,   //   for resource file
+        &canvasLeft, "spltsamp.rc");
+
+    IBitmapControl bmpBookCover             // Create a bitmap control
+        (ID_BITMAPCONTROL, &canvasFull,     //   with a resource bitmap
+        &canvasFull, ID_BITMAPRESOURCE);
+
+    canvasFull.setSplitWindowPercentage     // Allocate full canvas space
+        (&canvasLeft, 55);                  //   for left canvas
+    canvasFull.setSplitWindowPercentage     // Allocate full canvas space
+        (&bmpBookCover, 45);                //   for bitmap
+
+    canvasLeft.setSplitWindowPercentage     // Allocate left side canvas space
+        (&mleSourceCode, 85);               //   for source code display
+    canvasLeft.setSplitWindowPercentage     // Allocate canvas space
+        (&mleResourceFile, 15);             //   for resource file display
+
+    frame.setFocus ();                      // Set focus to the frame window
+    frame.show ();                          // Show the frame
+
+    IApplication::current().run();          // Run the application
+}
+
+
+SourceDisplayMle :: SourceDisplayMle        // Custom MLE window constructor
+    (unsigned long id, IWindow* parent, IWindow* owner, char * pszFile) :
+    IMultiLineEdit(id, parent, owner)       // Call IMle constructor
+{
+    disableDataUpdate ();                   // Make it read only
+    disableWordWrap ();                     // Turn off word wrap
+    IFont fontMono ("Courier", 8);          // Create a monospaced font
+    setFont (fontMono);                     // Set monospaced font
+    importFromFile (pszFile);               // Load source code into MLE
+    setTop (0);                             // Set first line at top
+}
+ 

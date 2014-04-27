@@ -1,0 +1,59 @@
+#include "StarFieldRenderer.cppcst"
+
+// Feature source code generation begins here...
+INotificationId StarFieldRenderer::fastCanvasId = "StarFieldRenderer::fastCanvas";
+INotificationId StarFieldRenderer::cameraHasMovedId = "StarFieldRenderer::cameraHasMoved";
+
+FastCanvas* StarFieldRenderer::fastCanvas() const
+{
+  return iFastCanvas;
+}
+
+StarFieldRenderer& StarFieldRenderer::setFastCanvas(FastCanvas* aFastCanvas)
+{
+  if (!(iFastCanvas == aFastCanvas))
+  {
+    iFastCanvas = aFastCanvas;
+    notifyObservers(INotificationEvent(StarFieldRenderer::fastCanvasId, *this));
+  } // endif
+  return *this;
+}
+
+// Feature source code generation ends here.
+
+
+// Feature source code generation begins here...
+INotificationId StarFieldRenderer::numPaletteEntriesId = "StarFieldRenderer::numPaletteEntries";
+INotificationId StarFieldRenderer::paletteId = "StarFieldRenderer::palette";
+
+int StarFieldRenderer::numPaletteEntries() const
+{
+  return iNumPaletteEntries;
+}
+
+StarFieldRenderer& StarFieldRenderer::setNumPaletteEntries(int aNumPaletteEntries)
+{
+  if (!(iNumPaletteEntries == aNumPaletteEntries))
+  {
+    iNumPaletteEntries = aNumPaletteEntries;
+    notifyObservers(INotificationEvent(StarFieldRenderer::numPaletteEntriesId, *this));
+  } // endif
+  return *this;
+}
+
+RGB2 const* StarFieldRenderer::palette() const
+{
+  return iPalette;
+}
+
+StarFieldRenderer& StarFieldRenderer::setPalette(RGB2 const* aPalette)
+{
+  if (!(iPalette == aPalette))
+  {
+    iPalette = aPalette;
+    notifyObservers(INotificationEvent(StarFieldRenderer::paletteId, *this));
+  } // endif
+  return *this;
+}
+
+// Feature source code generation ends here.

@@ -1,0 +1,225 @@
+
+// Feature source code generation begins here...
+INotificationId Sprite::positionId = "Sprite::position";
+INotificationId Sprite::sizeId = "Sprite::size";
+INotificationId Sprite::activeFrameId = "Sprite::activeFrame";
+INotificationId Sprite::fastCanvasId = "Sprite::fastCanvas";
+INotificationId Sprite::numFramesId = "Sprite::numFrames";
+INotificationId Sprite::filenameId = "Sprite::filename";
+
+IPoint Sprite::position() const
+{
+  return iPosition;
+}
+
+ISize Sprite::size() const
+{
+  return iSize;
+}
+
+unsigned int Sprite::activeFrame() const
+{
+  return iActiveFrame;
+}
+
+Sprite& Sprite::setActiveFrame(unsigned int aActiveFrame)
+{
+  if (!(iActiveFrame == aActiveFrame))
+  {
+    iActiveFrame = aActiveFrame;
+    notifyObservers(INotificationEvent(Sprite::activeFrameId, *this));
+  } // endif
+  return *this;
+}
+
+FastCanvas* Sprite::fastCanvas() const
+{
+  return iFastCanvas;
+}
+
+Sprite& Sprite::setFastCanvas(FastCanvas* aFastCanvas)
+{
+  if (!(iFastCanvas == aFastCanvas))
+  {
+    iFastCanvas = aFastCanvas;
+    notifyObservers(INotificationEvent(Sprite::fastCanvasId, *this));
+  } // endif
+  return *this;
+}
+
+Sprite& Sprite::setNumFrames(unsigned int aNumFrames)
+{
+  if (!(iNumFrames == aNumFrames))
+  {
+    iNumFrames = aNumFrames;
+    notifyObservers(INotificationEvent(Sprite::numFramesId, *this));
+  } // endif
+  return *this;
+}
+
+IString Sprite::filename() const
+{
+  return iFilename;
+}
+
+Sprite& Sprite::setFilename(const IString& aFilename)
+{
+  if (!(iFilename == aFilename))
+  {
+    iFilename = aFilename;
+   iGraphicFileInfo.loadFromFile (iFilename);
+   iImageHandler.load (iGraphicFileInfo.imageFilename(),
+                       iGraphicFileInfo.numFrames());
+   iSize = iImageHandler.size();
+   setNumFrames(iGraphicFileInfo.numFrames());
+   setActiveFrame (0);
+   loadFrame (0);
+    notifyObservers(INotificationEvent(Sprite::filenameId, *this));
+  } // endif
+  return *this;
+}
+
+IString Sprite::activeFrameAsText() const
+{
+  return IString (activeFrame());
+}
+
+IString Sprite::numFramesAsText() const
+{
+  return IString (numFrames());
+}
+
+IString Sprite::filenameWithoutPath() const
+{
+  char szDrive     [_MAX_DRIVE];
+  char szDir       [_MAX_DIR];
+  char szFilename  [_MAX_FNAME];
+  char szExtension [_MAX_EXT];
+
+  _splitpath (filename(), szDrive, szDir, szFilename, szExtension);
+  return IString(szFilename);
+}
+
+IString Sprite::positionAsText() const
+{
+  return iPosition.asString();
+}
+
+Sprite& Sprite::move(IPoint offset)
+{
+   IFUNCTRACE_DEVELOP();
+
+   setPosition (position() + offset);
+
+   loadFrame (activeFrame());
+   return *this;
+}
+
+// Feature source code generation ends here.
+
+Sprite& Sprite::advanceFrame(int numFramesToAdvance)
+{
+   IFUNCTRACE_DEVELOP();
+   int numFrames = (int) iImageHandler.numFrames();
+   IASSERTSTATE (numFrames > 0);
+
+   int iNewActiveFrame =
+      ((int) activeFrame() + numFramesToAdvance) % numFrames;
+
+   if (iNewActiveFrame < 0)
+      iNewActiveFrame += numFrames;
+
+   setActiveFrame (iNewActiveFrame);
+   loadFrame (iNewActiveFrame);
+   return *this;
+}
+
+/******************************************************************************
+Load the current animation frame
+******************************************************************************/
+
+void Sprite :: loadFrame (UINT iFrame)
+{
+   IFUNCTRACE_DEVELOP();
+   assert (iFrame < numFrames());
+   pabBitmap = iImageHandler.accessImage (iFrame);
+}
+
+
+/******************************************************************************
+Return the number of frames
+******************************************************************************/
+
+UINT Sprite :: numFrames () const
+{
+   return iGraphicFileInfo.numFrames();
+}
+
+
+
+/******************************************************************************
+Draw the sprite
+******************************************************************************/
+
+Sprite const & Sprite :: draw () const
+{
+   IFUNCTRACE_DEVELOP();
+   drawBitmap ((PUCHAR) iFastCanvas->buffer(), pabBitmap,
+       (int) position().x(), (int) position().y());
+   return *this;
+}
+
+
+void Sprite :: copyBitmap
+(
+   PUCHAR        pabTo,
+   UCHAR const * pabFrom,
+   int           cxToRow,
+   int           cxFromRow
+) const
+{
+   UCHAR const chTransparent = 0; // graphicFileInfo.transparentPaletteIndex ();
+
+   for (UINT iRow = 0; iRow < size().height(); iRow++)
+   {
+      for (UINT iCol = 0; iCol < size().width(); iCol++)
+         if (pabFrom [iCol] != chTransparent)
+            pabTo [iCol] = pabFrom [iCol];
+
+      pabTo   += cxToRow;
+      pabFrom += cxFromRow;
+   }
+}
+
+
+/******************************************************************************
+Draw a bitmap into the screen buffer, at the requested x and y offsets
+******************************************************************************/
+
+void Sprite :: drawBitmap (PUCHAR pabScreen,
+   UCHAR const * pabBitmapToDraw, int xDraw, int yDraw) const
+{
+   copyBitmap (pabScreen + yDraw * iFastCanvas->size().width() + xDraw,
+      pabBitmapToDraw,
+      (int) iFastCanvas->size().width(), (int) size().width());
+}
+
+
+
+
+
+
+
+// Feature source code generation begins here...
+
+Sprite& Sprite::setPosition(const IPoint& aPosition)
+{
+  if (!(iPosition == aPosition))
+  {
+    iPosition = aPosition;
+    notifyObservers(INotificationEvent(Sprite::positionId, *this));
+  } // endif
+  return *this;
+}
+
+// Feature source code generation ends here.

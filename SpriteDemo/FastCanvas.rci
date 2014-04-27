@@ -1,0 +1,58 @@
+#include "FastCanvas.h"
+
+#include "FastCanvas.h"
+
+#include <os2.h>
+
+#ifndef MAIN_RESOURCES_INCLUDED
+/*------------------------------ Main Resources ------------------------------*/
+#define MAIN_RESOURCES_INCLUDED
+
+HELPTABLE WND_FastCanvas
+   BEGIN
+   END
+
+#define FastCanvas_WINDOWRESOURCES
+#define FastCanvas_NONWINDOWRESOURCES
+STRINGTABLE
+   BEGIN
+      1,  "Visual Builder 3.0"
+   END
+
+#endif
+
+#ifdef FastCanvas_NONWINDOWRESOURCES
+/*--------------------- Non-Window ID Related Resources ----------------------*/
+#ifndef FastCanvas_NONWINDOWRESOURCES_INCLUDED
+#define FastCanvas_NONWINDOWRESOURCES_INCLUDED
+#endif
+#endif
+
+#ifdef FastCanvas_WINDOWRESOURCES
+/*----------------------- Window ID Related Resources ------------------------*/
+#ifdef FastCanvas_WINDOWRESOURCES_INCLUDING
+#define FastCanvas_WINDOWRESOURCES_RECURSING
+#endif
+#define FastCanvas_WINDOWRESOURCES_INCLUDING
+
+#ifndef FastCanvas_WINDOWRESOURCES_RECURSING
+
+#undef FastCanvas_WINDOWRESOURCES_INCLUDING
+#endif
+#endif
+
+#ifdef FastCanvas_HELPITEMRESOURCES
+/*--------------------------- Help Item Resources ----------------------------*/
+#ifdef FastCanvas_HELPITEMRESOURCES_INCLUDING
+#define FastCanvas_HELPITEMRESOURCES_RECURSING
+#endif
+#define FastCanvas_HELPITEMRESOURCES_INCLUDING
+#ifndef FastCanvas_HELPITEMRESOURCES_RECURSING
+
+#endif
+#endif
+
+#ifdef FastCanvas_HELPSUBITEMRESOURCES
+/*-------------------------- Help Subitem Resources --------------------------*/
+#endif
+

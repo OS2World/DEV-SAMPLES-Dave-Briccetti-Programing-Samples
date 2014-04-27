@@ -1,0 +1,43 @@
+:TARGET.SUFFIXES
+:DEPENDENCY..cpp .obj .rc .res 
+:TARGET.all
+:DEPENDENCY.
+.\resource.dll
+:RULE..cpp.obj
+:ACTION.Compile::C++ Compiler
+:COMMAND.
+icc.exe /DINCL_PM /DINCL_DOS /Wcndcnscnvdclenuextgengotinilanobsordporprorearettruunduni /Tx /O /Gm /Gd /Ge- /G5 /Tm /C %s
+:RULE.{F:\devel\DiveDemo2\resources}.cpp.obj
+:ACTION.Compile::C++ Compiler
+:COMMAND.
+icc.exe /DINCL_PM /DINCL_DOS /Wcndcnscnvdclenuextgengotinilanobsordporprorearettruunduni /Tx /O /Gm /Gd /Ge- /G5 /Tm /C %s
+:RULE..rc.res
+:ACTION.Compile::Resource Compiler
+:COMMAND.
+rc.exe -r %s %|dpfF.RES
+:RULE.{F:\devel\DiveDemo2\resources}.rc.res
+:ACTION.Compile::Resource Compiler
+:COMMAND.
+rc.exe -r %s %|dpfF.RES
+:TARGET..\resource.dll
+:DEPENDENCY.
+.\empty.obj
+.\resources.res
+{$(LIB)}resources.def
+:ACTION.Link::Linker
+:COMMAND.
+icc.exe @<<
+ /B" /pmtype:pm"
+ /Fe"resource.dll" 
+ resources.def
+ .\empty.obj
+<<
+:ACTION.Bind::Resource Bind
+:COMMAND.
+rc.exe .\resources.res resource.dll
+:TARGET..\empty.obj
+:DEPENDENCY.
+F:\devel\DiveDemo2\resources\empty.cpp
+:TARGET..\resources.res
+:DEPENDENCY.
+F:\devel\DiveDemo2\resources\resources.rc

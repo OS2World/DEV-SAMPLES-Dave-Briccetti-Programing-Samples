@@ -1,0 +1,13 @@
+// The name of the pcx file
+ImageFilename=ship.pcx
+// The number of frames in the image
+NumFrames=24
+// The first used palette index
+StartingPaletteIndex=0
+// The number of palette entries used
+NumPaletteEntries=256
+// Transparent color index (relative to start of used palette)
+TransparentPaletteIndex=0
+// The rotation angle of the first frame
+FirstFrameAngle=0
+

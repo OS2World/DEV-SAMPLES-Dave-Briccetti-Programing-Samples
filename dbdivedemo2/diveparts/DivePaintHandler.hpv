@@ -1,0 +1,10 @@
+private:
+   IPrivateResource * iDrawingSerializer;
+
+public:
+
+   DivePaintHandler (IPrivateResource *aDrawingSerializer);
+
+   Boolean paintWindow(IPaintEvent& event);
+
+

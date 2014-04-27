@@ -1,0 +1,37 @@
+#include "DiveImageBuffer.hppcst"
+
+
+
+// Feature source code generation begins here...
+public:
+  virtual DiveImageBuffer& setDiveHandle(HDIVE aDiveHandle);
+  virtual DiveImageBuffer& setImageNumber(ULONG aImageNumber);
+  virtual DiveImageBuffer& setSize(const ISize& aSize);
+  virtual IPrivateResource* drawingSerializer() const;
+  virtual DiveImageBuffer& setDrawingSerializer(IPrivateResource* aDrawingSerializer);
+  virtual void clear();
+  void allocate(ISize const& aSize);
+
+  static INotificationId bufferId;
+  static INotificationId diveHandleId;
+  static INotificationId imageNumberId;
+  static INotificationId sizeId;
+  static INotificationId drawingSerializerId;
+
+private:
+  char* iBuffer;
+  HDIVE iDiveHandle;
+  ULONG iImageNumber;
+  ISize iSize;
+  IPrivateResource* iDrawingSerializer;
+// Feature source code generation ends here.
+
+
+
+
+// Feature source code generation begins here...
+public:
+  virtual void deallocate();
+
+
+// Feature source code generation ends here.

@@ -1,0 +1,14 @@
+#define NUMSTARS 500
+
+private:
+   virtual void userConstructor();
+   virtual void userDestructor();
+   virtual void buildAndSetPalette ();
+
+   Star * aStars [NUMSTARS];
+
+protected:
+   static const ISize modelSpaceSize;
+   static const int numDistances;
+
+

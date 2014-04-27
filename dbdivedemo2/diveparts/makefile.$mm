@@ -1,0 +1,228 @@
+:TARGET.SUFFIXES
+:DEPENDENCY..LIB .cpp .dll .obj .sym 
+:TARGET.all
+:DEPENDENCY.
+.\divepart.sym
+.\divepart.LIB
+:RULE..cpp.obj
+:ACTION.Compile::C++ Compiler
+:COMMAND.
+icc.exe /DINCL_PM /DINCL_DOS /DINCL_DOSERRORS /Q /Wcndcnscnvdclenuextgengotinilanobsordporprorearettruunduni /V"@#Dave Briccetti Software Consulting:0.5#@DBDiveParts" /O /N20 /Gm /Gd /Ge- /G5 /Oi /C %s
+:RULE.{F:\devel\diveparts}.cpp.obj
+:ACTION.Compile::C++ Compiler
+:COMMAND.
+icc.exe /DINCL_PM /DINCL_DOS /DINCL_DOSERRORS /Q /Wcndcnscnvdclenuextgengotinilanobsordporprorearettruunduni /V"@#Dave Briccetti Software Consulting:0.5#@DBDiveParts" /O /N20 /Gm /Gd /Ge- /G5 /Oi /C %s
+:RULE..dll.sym
+:ACTION.MapSym::Map Symbols
+:COMMAND.
+mapsym.exe %|fF.map
+:RULE.{F:\devel\diveparts}.dll.sym
+:ACTION.MapSym::Map Symbols
+:COMMAND.
+mapsym.exe %|fF.map
+:RULE..dll.LIB
+:ACTION.Lib::Import Lib
+:COMMAND.
+implib.exe %|dpfF.LIB %s
+:RULE.{F:\devel\diveparts}.dll.LIB
+:ACTION.Lib::Import Lib
+:COMMAND.
+implib.exe %|dpfF.LIB %s
+:TARGET..\divepart.dll
+:DEPENDENCY.
+.\FastCanvas.obj
+.\Timer0.obj
+.\DiveBlitterHandler.obj
+.\DiveEventHandler.obj
+.\DiveImageBuffer.obj
+.\DiveImageRenderer.obj
+.\DivePaintHandler.obj
+{$(LIB)}os2386.lib
+{$(LIB)}mmpm2.lib
+{$(LIB)}diveparts.def
+:ACTION.Link::Linker
+:COMMAND.
+icc.exe @<<
+/DINCL_PM
+ /DINCL_DOS
+ /DINCL_DOSERRORS
+ 
+ /Tdp /Q 
+ /Wcndcnscnvdclenuextgengotinilanobsordporprorearettruunduni 
+ /V"@#Dave Briccetti Software Consulting:0.5#@DBDiveParts" 
+ /O /N20 /Gm /Gd /Ge- /G5 
+ /Oi 
+ /B" /pmtype:pm /optfunc /nologo /m"
+ /Fedivepart.dll 
+ os2386.lib 
+ mmpm2.lib 
+ diveparts.def
+ .\FastCanvas.obj
+ .\Timer0.obj
+ .\DiveBlitterHandler.obj
+ .\DiveEventHandler.obj
+ .\DiveImageBuffer.obj
+ .\DiveImageRenderer.obj
+ .\DivePaintHandler.obj
+<<
+:TARGET..\FastCanvas.obj
+:DEPENDENCY.
+F:\devel\diveparts\FastCanvas.cpp
+{F:\devel\diveparts;$(INCLUDE);}Timer0.hpp
+{F:\devel\diveparts;$(INCLUDE);}os2.h
+{F:\devel\diveparts;$(INCLUDE);}tmr0_ioc.h
+{F:\devel\diveparts;$(INCLUDE);}Timer0.h
+{F:\devel\diveparts;$(INCLUDE);}Timer0.hpv
+{F:\devel\diveparts;$(INCLUDE);}DiveBlitterHandler.hpp
+{F:\devel\diveparts;$(INCLUDE);}DiveBlitterHandler.h
+{F:\devel\diveparts;$(INCLUDE);}DiveBlitterHandler.hpv
+{F:\devel\diveparts;$(INCLUDE);}DiveEventHandler.hpp
+{F:\devel\diveparts;$(INCLUDE);}FastCanvas.hpp
+{F:\devel\diveparts;$(INCLUDE);}DiveEventHandler.h
+{F:\devel\diveparts;$(INCLUDE);}DiveEventHandler.hpv
+{F:\devel\diveparts;$(INCLUDE);}DiveImageRenderer.hpp
+{F:\devel\diveparts;$(INCLUDE);}DiveImageBuffer.hpp
+{F:\devel\diveparts;$(INCLUDE);}DivePaintHandler.hpp
+{F:\devel\diveparts;$(INCLUDE);}FastCanvas.h
+{F:\devel\diveparts;$(INCLUDE);}FastCanvas.hpv
+{F:\devel\diveparts;$(INCLUDE);}DiveImageRenderer.h
+{F:\devel\diveparts;$(INCLUDE);}DiveImageRenderer.hpv
+{F:\devel\diveparts;$(INCLUDE);}DiveImageBuffer.h
+{F:\devel\diveparts;$(INCLUDE);}DiveImageBuffer.hpv
+{F:\devel\diveparts;$(INCLUDE);}DivePaintHandler.h
+{F:\devel\diveparts;$(INCLUDE);}DivePaintHandler.hpv
+{F:\devel\diveparts;$(INCLUDE);}FastCanvas.hppcst
+{F:\devel\diveparts;$(INCLUDE);}DiveImageBuffer.hppcst
+{F:\devel\diveparts;$(INCLUDE);}FastCanvas.inl
+{F:\devel\diveparts;$(INCLUDE);}DiveImageBuffer.inl
+{F:\devel\diveparts;$(INCLUDE);}FastCanvas.cpv
+{F:\devel\diveparts;$(INCLUDE);}FastCanvas.cppcst
+:TARGET..\DivePaintHandler.obj
+:DEPENDENCY.
+F:\devel\diveparts\DivePaintHandler.cpp
+{F:\devel\diveparts;$(INCLUDE);}Timer0.hpp
+{F:\devel\diveparts;$(INCLUDE);}os2.h
+{F:\devel\diveparts;$(INCLUDE);}tmr0_ioc.h
+{F:\devel\diveparts;$(INCLUDE);}Timer0.h
+{F:\devel\diveparts;$(INCLUDE);}Timer0.hpv
+{F:\devel\diveparts;$(INCLUDE);}DiveBlitterHandler.hpp
+{F:\devel\diveparts;$(INCLUDE);}DiveBlitterHandler.h
+{F:\devel\diveparts;$(INCLUDE);}DiveBlitterHandler.hpv
+{F:\devel\diveparts;$(INCLUDE);}DiveEventHandler.hpp
+{F:\devel\diveparts;$(INCLUDE);}FastCanvas.hpp
+{F:\devel\diveparts;$(INCLUDE);}DiveEventHandler.h
+{F:\devel\diveparts;$(INCLUDE);}DiveEventHandler.hpv
+{F:\devel\diveparts;$(INCLUDE);}DiveImageRenderer.hpp
+{F:\devel\diveparts;$(INCLUDE);}DiveImageBuffer.hpp
+{F:\devel\diveparts;$(INCLUDE);}DivePaintHandler.hpp
+{F:\devel\diveparts;$(INCLUDE);}FastCanvas.h
+{F:\devel\diveparts;$(INCLUDE);}FastCanvas.hpv
+{F:\devel\diveparts;$(INCLUDE);}DiveImageRenderer.h
+{F:\devel\diveparts;$(INCLUDE);}DiveImageRenderer.hpv
+{F:\devel\diveparts;$(INCLUDE);}DiveImageBuffer.h
+{F:\devel\diveparts;$(INCLUDE);}DiveImageBuffer.hpv
+{F:\devel\diveparts;$(INCLUDE);}DivePaintHandler.h
+{F:\devel\diveparts;$(INCLUDE);}DivePaintHandler.hpv
+{F:\devel\diveparts;$(INCLUDE);}FastCanvas.hppcst
+{F:\devel\diveparts;$(INCLUDE);}DiveImageBuffer.hppcst
+{F:\devel\diveparts;$(INCLUDE);}FastCanvas.inl
+{F:\devel\diveparts;$(INCLUDE);}DiveImageBuffer.inl
+{F:\devel\diveparts;$(INCLUDE);}DivePaintHandler.cpv
+{F:\devel\diveparts;$(INCLUDE);}DivePaintHandler.cppcst
+:TARGET..\DiveImageRenderer.obj
+:DEPENDENCY.
+F:\devel\diveparts\DiveImageRenderer.cpp
+{F:\devel\diveparts;$(INCLUDE);}Timer0.hpp
+{F:\devel\diveparts;$(INCLUDE);}os2.h
+{F:\devel\diveparts;$(INCLUDE);}tmr0_ioc.h
+{F:\devel\diveparts;$(INCLUDE);}Timer0.h
+{F:\devel\diveparts;$(INCLUDE);}Timer0.hpv
+{F:\devel\diveparts;$(INCLUDE);}DiveBlitterHandler.hpp
+{F:\devel\diveparts;$(INCLUDE);}DiveBlitterHandler.h
+{F:\devel\diveparts;$(INCLUDE);}DiveBlitterHandler.hpv
+{F:\devel\diveparts;$(INCLUDE);}DiveEventHandler.hpp
+{F:\devel\diveparts;$(INCLUDE);}FastCanvas.hpp
+{F:\devel\diveparts;$(INCLUDE);}DiveEventHandler.h
+{F:\devel\diveparts;$(INCLUDE);}DiveEventHandler.hpv
+{F:\devel\diveparts;$(INCLUDE);}DiveImageRenderer.hpp
+{F:\devel\diveparts;$(INCLUDE);}DiveImageBuffer.hpp
+{F:\devel\diveparts;$(INCLUDE);}DivePaintHandler.hpp
+{F:\devel\diveparts;$(INCLUDE);}FastCanvas.h
+{F:\devel\diveparts;$(INCLUDE);}FastCanvas.hpv
+{F:\devel\diveparts;$(INCLUDE);}DiveImageRenderer.h
+{F:\devel\diveparts;$(INCLUDE);}DiveImageRenderer.hpv
+{F:\devel\diveparts;$(INCLUDE);}DiveImageBuffer.h
+{F:\devel\diveparts;$(INCLUDE);}DiveImageBuffer.hpv
+{F:\devel\diveparts;$(INCLUDE);}DivePaintHandler.h
+{F:\devel\diveparts;$(INCLUDE);}DivePaintHandler.hpv
+{F:\devel\diveparts;$(INCLUDE);}FastCanvas.hppcst
+{F:\devel\diveparts;$(INCLUDE);}DiveImageBuffer.hppcst
+{F:\devel\diveparts;$(INCLUDE);}FastCanvas.inl
+{F:\devel\diveparts;$(INCLUDE);}DiveImageBuffer.inl
+{F:\devel\diveparts;$(INCLUDE);}DiveImageRenderer.cpv
+{F:\devel\diveparts;$(INCLUDE);}DiveImageRenderer.cppcst
+:TARGET..\DiveImageBuffer.obj
+:DEPENDENCY.
+F:\devel\diveparts\DiveImageBuffer.cpp
+{F:\devel\diveparts;$(INCLUDE);}DiveImageBuffer.hpp
+{F:\devel\diveparts;$(INCLUDE);}DiveImageBuffer.h
+{F:\devel\diveparts;$(INCLUDE);}DiveImageBuffer.hpv
+{F:\devel\diveparts;$(INCLUDE);}DiveImageBuffer.hppcst
+{F:\devel\diveparts;$(INCLUDE);}DiveImageBuffer.inl
+{F:\devel\diveparts;$(INCLUDE);}DiveImageBuffer.cpv
+{F:\devel\diveparts;$(INCLUDE);}DiveImageBuffer.cppcst
+:TARGET..\DiveEventHandler.obj
+:DEPENDENCY.
+F:\devel\diveparts\DiveEventHandler.cpp
+{F:\devel\diveparts;$(INCLUDE);}Timer0.hpp
+{F:\devel\diveparts;$(INCLUDE);}os2.h
+{F:\devel\diveparts;$(INCLUDE);}tmr0_ioc.h
+{F:\devel\diveparts;$(INCLUDE);}Timer0.h
+{F:\devel\diveparts;$(INCLUDE);}Timer0.hpv
+{F:\devel\diveparts;$(INCLUDE);}DiveBlitterHandler.hpp
+{F:\devel\diveparts;$(INCLUDE);}DiveBlitterHandler.h
+{F:\devel\diveparts;$(INCLUDE);}DiveBlitterHandler.hpv
+{F:\devel\diveparts;$(INCLUDE);}DiveEventHandler.hpp
+{F:\devel\diveparts;$(INCLUDE);}FastCanvas.hpp
+{F:\devel\diveparts;$(INCLUDE);}DiveEventHandler.cppcst
+{F:\devel\diveparts;$(INCLUDE);}DiveEventHandler.h
+{F:\devel\diveparts;$(INCLUDE);}DiveEventHandler.hpv
+{F:\devel\diveparts;$(INCLUDE);}DiveImageRenderer.hpp
+{F:\devel\diveparts;$(INCLUDE);}DiveImageBuffer.hpp
+{F:\devel\diveparts;$(INCLUDE);}DivePaintHandler.hpp
+{F:\devel\diveparts;$(INCLUDE);}FastCanvas.h
+{F:\devel\diveparts;$(INCLUDE);}FastCanvas.hpv
+{F:\devel\diveparts;$(INCLUDE);}DiveImageRenderer.h
+{F:\devel\diveparts;$(INCLUDE);}DiveImageRenderer.hpv
+{F:\devel\diveparts;$(INCLUDE);}DiveImageBuffer.h
+{F:\devel\diveparts;$(INCLUDE);}DiveImageBuffer.hpv
+{F:\devel\diveparts;$(INCLUDE);}DivePaintHandler.h
+{F:\devel\diveparts;$(INCLUDE);}DivePaintHandler.hpv
+{F:\devel\diveparts;$(INCLUDE);}FastCanvas.hppcst
+{F:\devel\diveparts;$(INCLUDE);}DiveImageBuffer.hppcst
+{F:\devel\diveparts;$(INCLUDE);}FastCanvas.inl
+{F:\devel\diveparts;$(INCLUDE);}DiveImageBuffer.inl
+:TARGET..\DiveBlitterHandler.obj
+:DEPENDENCY.
+F:\devel\diveparts\DiveBlitterHandler.cpp
+{F:\devel\diveparts;$(INCLUDE);}DiveBlitterHandler.hpp
+{F:\devel\diveparts;$(INCLUDE);}DiveBlitterHandler.cpv
+{F:\devel\diveparts;$(INCLUDE);}DiveBlitterHandler.h
+{F:\devel\diveparts;$(INCLUDE);}DiveBlitterHandler.hpv
+{F:\devel\diveparts;$(INCLUDE);}DiveBlitterHandler.cppcst
+:TARGET..\Timer0.obj
+:DEPENDENCY.
+F:\devel\diveparts\Timer0.cpp
+{F:\devel\diveparts;$(INCLUDE);}Timer0.hpp
+{F:\devel\diveparts;$(INCLUDE);}Timer0.cpv
+{F:\devel\diveparts;$(INCLUDE);}os2.h
+{F:\devel\diveparts;$(INCLUDE);}tmr0_ioc.h
+{F:\devel\diveparts;$(INCLUDE);}Timer0.h
+{F:\devel\diveparts;$(INCLUDE);}Timer0.hpv
+{F:\devel\diveparts;$(INCLUDE);}Timer0.cppcst
+:TARGET..\divepart.sym
+:DEPENDENCY.
+.\divepart.dll
+:TARGET..\divepart.LIB
+:DEPENDENCY.
+.\divepart.dll

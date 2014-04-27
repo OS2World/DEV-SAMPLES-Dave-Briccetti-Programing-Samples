@@ -1,0 +1,38 @@
+private:
+   virtual void userConstructor();
+   virtual void userDestructor();
+
+// Feature source code generation begins here...
+public:
+  virtual FastCanvas* fastCanvas() const;
+  virtual DiveImageRenderer& setFastCanvas(FastCanvas* aFastCanvas);
+  virtual void render();
+
+  static INotificationId fastCanvasId;
+
+private:
+  FastCanvas* iFastCanvas;
+// Feature source code generation ends here.
+
+
+// Feature source code generation begins here...
+public:
+  virtual int numPaletteEntries() const;
+  virtual DiveImageRenderer& setNumPaletteEntries(int aNumPaletteEntries);
+  virtual RGB2 const* palette() const;
+
+  static INotificationId numPaletteEntriesId;
+  static INotificationId paletteId;
+
+private:
+  int iNumPaletteEntries;
+  RGB2 const* iPalette;
+// Feature source code generation ends here.
+
+
+// Feature source code generation begins here...
+public:
+  virtual DiveImageRenderer& setPalette(RGB2 const* aPalette);
+
+
+// Feature source code generation ends here.

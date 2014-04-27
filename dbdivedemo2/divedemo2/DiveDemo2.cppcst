@@ -1,0 +1,10 @@
+void DiveDemo2::userConstructor()
+{
+   srand (time(0));                      // Seed random number generator
+}
+
+void DiveDemo2::userDestructor()
+{
+}
+
+

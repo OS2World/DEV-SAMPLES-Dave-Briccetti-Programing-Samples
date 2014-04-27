@@ -1,0 +1,12 @@
+
+   public:
+
+   DiveEventHandler (DiveBlitterHandler * aDiveBlitterHandler);
+   Boolean dispatchHandlerEvent(IEvent& event);
+
+   private:
+
+   DiveBlitterHandler * iDiveBlitterHandler;
+   DiveEventHandler ();  // Not used
+
+

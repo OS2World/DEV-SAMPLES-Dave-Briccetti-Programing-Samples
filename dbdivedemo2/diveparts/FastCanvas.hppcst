@@ -1,0 +1,22 @@
+public:
+#include "FastCanvas.inl"
+
+private:
+   IThread animationThread;
+   IPrivateResource multiThreadAccess;
+   IPrivateResource drawingSerializer;
+   DIVE_CAPS DiveCaps;
+   FOURCC    fccFormats[100];        // Color format code
+
+private:
+
+   FastCanvas& destroy();
+   FastCanvas& initializeMemberData();
+   FastCanvas& confirmDIVECapabilities();
+   virtual FastCanvas& blit();
+   void animationThreadFunction ();
+   void stopAnimation();
+   void startAnimation();
+
+
+

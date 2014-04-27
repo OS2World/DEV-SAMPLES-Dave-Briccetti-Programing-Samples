@@ -1,0 +1,41 @@
+#include "Star.cppcst"
+
+// Feature source code generation begins here...
+INotificationId Star::positionId = "Star::position";
+INotificationId Star::distanceIndexId = "Star::distanceIndex";
+
+IPoint Star::position() const
+{
+  return iPosition;
+}
+
+Star& Star::setPosition(const IPoint& aPosition)
+{
+  if (!(iPosition == aPosition))
+  {
+    iPosition = aPosition;
+    notifyObservers(INotificationEvent(Star::positionId, *this));
+  } // endif
+  return *this;
+}
+
+int Star::distanceIndex() const
+{
+  return iDistanceIndex;
+}
+
+Star& Star::setDistanceIndex(int aDistanceIndex)
+{
+  if (!(iDistanceIndex == aDistanceIndex))
+  {
+    iDistanceIndex = aDistanceIndex;
+    notifyObservers(INotificationEvent(Star::distanceIndexId, *this));
+  } // endif
+  return *this;
+}
+
+// Feature source code generation ends here.
+
+
+
+

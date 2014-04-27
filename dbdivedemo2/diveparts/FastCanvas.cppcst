@@ -1,0 +1,287 @@
+INotificationId _Export FastCanvas::diveImageRendererId = "FastCanvas::diveImageRenderer";
+INotificationId _Export FastCanvas::drawFrequencyRequestedFPSId = "FastCanvas::drawFrequencyRequestedFPS";
+INotificationId _Export FastCanvas::drawFrequencyActualFPSId = "FastCanvas::drawFrequencyActualFPS";
+
+
+void FastCanvas::animationThreadFunction ()
+{
+   IFUNCTRACE_DEVELOP();
+
+   // All times are in milliseconds unless otherwise noted
+
+   /*
+    *  Calculate the interval between frames as the inverse of the number
+    *  of frames per second requested.  If the requested rate is zero,
+    *  set the interval to zero.
+    */
+
+#ifndef BYPASS_HIRES_TIMING
+   Timer0 iTimer0;
+   static ULONG const timingInterval = 1000;
+   ULONG timingStart = iTimer0.time();
+   INT numFramesDrawnInTimingInterval = 0;
+#endif
+
+   while (isAnimationRunning())
+   {
+#ifndef BYPASS_HIRES_TIMING
+      ULONG const requestedFrameInterval = (drawFrequencyRequestedFPS() != 0.0) ?
+         (ULONG) (1.0 / drawFrequencyRequestedFPS() * 1000.0) : 0;
+      ULONG const timeAtStartOfDraw = iTimer0.time();
+      ULONG const timeNextDrawRequested =
+         timeAtStartOfDraw + requestedFrameInterval;
+#endif
+
+      draw ();
+
+#ifndef BYPASS_HIRES_TIMING
+      ++numFramesDrawnInTimingInterval;
+
+      iTimer0.delayUntil (timeNextDrawRequested);
+
+      if (timeNextDrawRequested > timingStart + timingInterval)
+      {
+         timingStart = timeNextDrawRequested;
+         setDrawFrequencyActualFPS ((float) numFramesDrawnInTimingInterval);
+         numFramesDrawnInTimingInterval = 0;
+         iTimer0.delayFor (5);  // Help keep from hanging PM
+      }
+#endif
+   }
+
+#ifndef BYPASS_HIRES_TIMING
+   setDrawFrequencyActualFPS ((float) 0);
+#endif
+}
+
+void FastCanvas::startAnimation()
+{
+   IFUNCTRACE_DEVELOP();
+
+   enableAnimationRunning (True);
+
+   animationThread.start (new IThreadMemberFn<FastCanvas>
+      (*this, FastCanvas::animationThreadFunction));
+}
+
+void FastCanvas::stopAnimation()
+{
+   IFUNCTRACE_DEVELOP();
+   enableAnimationRunning (False);
+   IThread::current().waitFor (animationThread);
+}
+
+void FastCanvas::userConstructor()
+{
+   IFUNCTRACE_DEVELOP();
+   enableAnimationRunning (False);
+   iDiveImageRenderer         = 0;
+   iDiveBlitterHandler->setDrawingSerializer (&drawingSerializer);
+   iDiveImageBuffer->setDrawingSerializer (&drawingSerializer);
+
+   confirmDIVECapabilities ();
+
+   HDIVE hdiveNew;
+   ULONG rc = DiveOpen (&hdiveNew, FALSE, 0 );
+   if (rc != DIVE_SUCCESS)
+   {
+      IString msg ("DiveOpen failed: " + IString(rc));
+      IAccessError err (msg);
+      ITHROW (err);
+   }
+
+   setDiveHandle (hdiveNew);
+
+   BOOL fOK = WinSetVisibleRegionNotify (handle(), TRUE);
+   if (! fOK)
+      ITHROWGUIERROR ("WinSetVisibleRegionNotify");
+
+   postEvent (WM_VRNENABLED, True, 0);
+}
+
+
+void FastCanvas::userDestructor()
+{
+   IFUNCTRACE_DEVELOP();
+
+   iDiveImageBuffer->deallocate ();
+
+   ULONG rc = DiveClose (iDiveHandle);
+   if (rc != DIVE_SUCCESS)
+   {
+      IString msg ("DiveClose failed: " + IString(rc));
+      IAccessError err (msg);
+      ITHROW (err);
+   }
+
+}
+
+
+FastCanvas& FastCanvas::setDiveImageRenderer(DiveImageRenderer* aDiveImageRenderer)
+{
+  if (!(iDiveImageRenderer == aDiveImageRenderer))
+  {
+    iDiveImageRenderer = aDiveImageRenderer;
+    notifyObservers(INotificationEvent(FastCanvas::diveImageRendererId, *this));
+  } // endif
+
+   DiveSetSourcePalette (iDiveHandle, 0, iDiveImageRenderer->numPaletteEntries(),
+      (PBYTE) iDiveImageRenderer->palette());
+
+  return *this;
+}
+
+
+FastCanvas& FastCanvas::blit()
+{
+   IFUNCTRACE_DEVELOP();
+
+   if (iDiveBlitterHandler->isBlitting ())
+   {
+      ULONG rc = DiveBlitImage (iDiveHandle,
+         iDiveImageBuffer->imageNumber(), DIVE_BUFFER_SCREEN);
+      if (rc != DIVE_SUCCESS)
+      {
+         IString msg ("DiveBlitImage: " + IString(rc));
+         IAccessError err (msg);
+         ITHROW (err);
+      }
+   }
+   else
+      ITRACE_DEVELOP ("Not blitting--disabled region");
+
+   return *this;
+}
+
+
+FastCanvas& FastCanvas::draw()
+{
+   IFUNCTRACE_DEVELOP();
+   IASSERTSTATE (iDiveHandle);
+
+   IResourceLock lock (drawingSerializer, 3000);
+
+   if (iDiveImageBuffer->size() != ISize(0,0))
+   {
+      if (iDiveImageRenderer)
+         iDiveImageRenderer->render();
+
+      blit ();
+   }
+
+   return *this;
+}
+
+FastCanvas& FastCanvas::confirmDIVECapabilities()
+{
+
+   memset (&DiveCaps, 0, sizeof DiveCaps);
+   memset (&fccFormats, 0, sizeof fccFormats);
+   DiveCaps.pFormatData    = fccFormats;
+   DiveCaps.ulFormatLength = sizeof fccFormats;
+   DiveCaps.ulStructLen    = sizeof DiveCaps;
+
+   ULONG rc = DiveQueryCaps (&DiveCaps, DIVE_BUFFER_SCREEN);
+
+   if (rc != DIVE_SUCCESS)
+   {
+      IString msg ("DiveQueryCaps failed: " + IString(rc));
+      IAccessError err (msg);
+      ITHROW (err);
+   }
+
+   if (DiveCaps.ulDepth < 8)
+   {
+      IAccessError errDiveOpen
+         ("This program requires a color depth of at least 8 bits.");
+      ITHROW (errDiveOpen);
+   }
+
+   return *this;
+}
+
+
+FastCanvas& FastCanvas::clear()
+{
+  iDiveImageBuffer->clear();
+  return *this;
+}
+
+
+float FastCanvas::drawFrequencyRequestedFPS()  //
+{
+  multiThreadAccess.lock(3000);   //
+  float const f = iDrawFrequencyRequestedFPS;
+  multiThreadAccess.unlock();   //
+  return f;
+}
+
+FastCanvas& FastCanvas::setDrawFrequencyRequestedFPS
+  (float aDrawFrequencyRequestedFPS)
+{
+  IFUNCTRACE_DEVELOP();
+  multiThreadAccess.lock(3000);   //
+  if (!(iDrawFrequencyRequestedFPS == aDrawFrequencyRequestedFPS))
+  {
+    iDrawFrequencyRequestedFPS = aDrawFrequencyRequestedFPS;
+    multiThreadAccess.unlock();   //
+
+    if ((iDrawFrequencyRequestedFPS == 0.0) && isAnimationRunning())
+      stopAnimation();
+    else
+      if ((iDrawFrequencyRequestedFPS != 0.0) && ! isAnimationRunning())
+        startAnimation();
+
+    notifyObservers
+      (INotificationEvent(FastCanvas::drawFrequencyRequestedFPSId, *this));
+  } // endif
+  else
+    multiThreadAccess.unlock();   //
+  return *this;
+}
+
+#pragma export (FastCanvas::drawFrequencyActualFPS())
+float FastCanvas::drawFrequencyActualFPS()
+{
+  multiThreadAccess.lock(3000);   //
+  float f = iDrawFrequencyActualFPS;
+  multiThreadAccess.unlock();   //
+  return f;
+}
+
+FastCanvas& FastCanvas::setDrawFrequencyActualFPS(float aDrawFrequencyActualFPS)
+{
+  IFUNCTRACE_DEVELOP();
+  multiThreadAccess.lock(3000);   //
+  if (!(iDrawFrequencyActualFPS == aDrawFrequencyActualFPS))
+  {
+    iDrawFrequencyActualFPS = aDrawFrequencyActualFPS;
+    multiThreadAccess.unlock();   //
+
+    postEvent (command, 20, 21);
+  } // endif
+  else
+    multiThreadAccess.unlock();   //
+  return *this;
+}
+
+FastCanvas& FastCanvas::setPriorityClass
+  (IApplication::PriorityClass aPriorityClass)
+{
+  if (!(iPriorityClass == aPriorityClass))
+  {
+    iPriorityClass = aPriorityClass;
+    IThread::current().setPriority (aPriorityClass, 15);  //
+    animationThread.setPriority (aPriorityClass, 14);  //
+    notifyObservers(INotificationEvent(FastCanvas::priorityClassId, *this));
+  } // endif
+  return *this;
+}
+
+ULONG FastCanvas::colorDepth() const
+{
+  return DiveCaps.ulDepth;
+}
+
+
+

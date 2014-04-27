@@ -1,0 +1,31 @@
+
+
+SpriteDemo& SpriteDemo::sizeAndPositionAppWindow()
+{
+   iFastCanvas1->setMinimumSize (ISize (320,200));
+   moveSizeToClient (iMultiCellCanvas1->minimumSize());
+   moveTo (IPoint((parent()->size().width() - size().width()) / 2,
+      (parent()->size().height() - size().height()) / 2));
+   show ();
+   return *this;
+}
+
+
+INotificationId SpriteDemo::fastMovementMultiplierId = "SpriteDemo::fastMovementMultiplier";
+
+IPoint SpriteDemo::fastMovementMultiplier() const
+{
+  return iFastMovementMultiplier;
+}
+
+SpriteDemo& SpriteDemo::setFastMovementMultiplier(const IPoint& aFastMovementMultiplier)
+{
+  if (!(iFastMovementMultiplier == aFastMovementMultiplier))
+  {
+    iFastMovementMultiplier = aFastMovementMultiplier;
+    notifyObservers(INotificationEvent(SpriteDemo::fastMovementMultiplierId, *this));
+  } // endif
+  return *this;
+}
+
+

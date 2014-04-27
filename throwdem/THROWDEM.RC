@@ -1,0 +1,18 @@
+#include "idres.h"
+
+MENU IDFRAME_MAIN 
+{
+    SUBMENU "Throw", -1
+    {
+        MENUITEM "GUI Error",       IDM_GUI
+        MENUITEM "CP Error",        IDM_CP
+        MENUITEM "Assert Parm",     IDM_ASSERTPARM
+        MENUITEM "Assert State",    IDM_ASSERTSTATE
+    }
+}
+
+
+STRINGTABLE
+{
+    IDFRAME_MAIN,       "Tip of the Month - ITHROW Macros"
+}

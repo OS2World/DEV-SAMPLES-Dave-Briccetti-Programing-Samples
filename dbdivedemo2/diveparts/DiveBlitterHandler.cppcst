@@ -1,0 +1,120 @@
+
+DiveBlitterHandler& DiveBlitterHandler::enableBlitting(Boolean enable)
+{
+  IResourceLock lock (*iDrawingSerializer);
+
+  if (!(iBlitting == enable))
+  {
+    iBlitting = enable;
+
+    if (enable)
+       setUpBlitter();
+    else
+       disableBlitting();
+
+    notifyObservers(INotificationEvent(DiveBlitterHandler::blittingId, *this));
+  } // endif
+  return *this;
+}
+
+
+void DiveBlitterHandler::disableBlitting()
+{
+   IFUNCTRACE_DEVELOP();
+   ULONG rc = DiveSetupBlitter (iDiveHandle, 0);
+   if (rc != DIVE_SUCCESS)
+   {
+      IString msg ("DiveSetupBlitter failed: " + IString(rc));
+      IAccessError err (msg);
+      ITHROW (err);
+   }
+}
+
+void DiveBlitterHandler::setUpBlitter()
+{
+   IFUNCTRACE_DEVELOP();
+   IWindowHandle hwnd = iWindow->handle();
+
+   HPS hps = WinGetPS (hwnd);
+   if (hps == 0)
+      ITHROWGUIERROR ("WinGetPS");
+   HRGN const hrgn = GpiCreateRegion (hps, 0L, 0);
+   if (hrgn == RGN_ERROR)
+      ITHROWGUIERROR ("GpiCreateRegion");
+
+   ULONG const ulrgnrc = WinQueryVisibleRegion (hwnd, hrgn);
+   if (ulrgnrc == RGN_ERROR)
+      ITHROWGUIERROR ("WinQueryVisibleRegion");
+
+   static int const maxVisibleRectangles = 50;
+   RECTL   arclVisible [maxVisibleRectangles];
+   RGNRECT rgnCtl = {0};
+   rgnCtl.ircStart     = 0;
+   rgnCtl.crc          = maxVisibleRectangles;
+   rgnCtl.ulDirection  = 1;
+
+   BOOL fOK = GpiQueryRegionRects (hps, hrgn, NULL, &rgnCtl, arclVisible);
+   if (! fOK)
+      ITHROWGUIERROR ("GpiQueryRegionRects");
+
+   fOK = GpiDestroyRegion (hps, hrgn);
+   if (! fOK)
+      ITHROWGUIERROR ("GpiDestroyRegion");
+
+   fOK = WinReleasePS( hps );
+   if (! fOK)
+      ITHROWGUIERROR ("WinReleasePS");
+
+   ULONG rc = DiveSetupBlitter (iDiveHandle, 0 );
+   if (rc != DIVE_SUCCESS)
+   {
+      IString msg ("DiveSetupBlitter failed: " + IString(rc));
+      IAccessError err (msg);
+      ITHROW (err);
+   }
+
+   SETUP_BLITTER SetupBlitter = {0};
+   SetupBlitter.ulStructLen = sizeof SetupBlitter;
+   SetupBlitter.fInvert           = FALSE;
+   SetupBlitter.ulDitherType      = 1;
+
+   SetupBlitter.fccSrcColorFormat = FOURCC_LUT8;
+   int const alignedWidth = iWindow->size().width() & (~ 7);
+   SetupBlitter.ulSrcWidth        = alignedWidth;
+   SetupBlitter.ulSrcHeight       = iWindow->size().height();
+
+   SetupBlitter.fccDstColorFormat = FOURCC_SCRN;
+   SetupBlitter.ulDstWidth        = alignedWidth;
+   SetupBlitter.ulDstHeight       = iWindow->size().height();
+
+   ITRACE_DEVELOP ("Source/dest width/height: " +
+      IString (SetupBlitter.ulSrcWidth ) + " " +
+      IString (SetupBlitter.ulSrcHeight) + " " +
+      IString (SetupBlitter.ulDstWidth ) + " " +
+      IString (SetupBlitter.ulDstHeight));
+
+   POINTL ptlBottomLeft = {0};
+   WinMapWindowPoints (hwnd, HWND_DESKTOP, &ptlBottomLeft, 1);
+   SetupBlitter.lScreenPosX   = ptlBottomLeft.x;
+   SetupBlitter.lScreenPosY   = ptlBottomLeft.y;
+
+   ITRACE_DEVELOP ("Screen pos: " + IString (IPoint (ptlBottomLeft).asString()));
+
+   SetupBlitter.ulNumDstRects = rgnCtl.crcReturned;
+   SetupBlitter.pVisDstRects  = arclVisible;
+
+   ITRACE_DEVELOP ("Num rectangles: " + IString (rgnCtl.crcReturned));
+
+   rc = DiveSetupBlitter (iDiveHandle, &SetupBlitter);
+   if (rc != DIVE_SUCCESS)
+   {
+      IString msg ("DiveSetupBlitter failed: " + IString(rc));
+      IAccessError err (msg);
+      ITHROW (err);
+   }
+
+   iWindow->refresh();
+}
+
+
+

@@ -1,0 +1,99 @@
+
+
+// Feature source code generation begins here...
+INotificationId SpriteCommander::spriteSequenceId = "SpriteCommander::spriteSequence";
+INotificationId SpriteCommander::selectedSpriteNumberId = "SpriteCommander::selectedSpriteNumber";
+INotificationId SpriteCommander::fastCanvasId = "SpriteCommander::fastCanvas";
+INotificationId SpriteCommander::fastMovementMultiplierId = "SpriteCommander::fastMovementMultiplier";
+
+IVSequence<Sprite*>* SpriteCommander::spriteSequence() const
+{
+  return iSpriteSequence;
+}
+
+SpriteCommander& SpriteCommander::setSpriteSequence(IVSequence<Sprite*>* aSpriteSequence)
+{
+  if (!(iSpriteSequence == aSpriteSequence))
+  {
+    iSpriteSequence = aSpriteSequence;
+    notifyObservers(INotificationEvent(SpriteCommander::spriteSequenceId, *this));
+  } // endif
+  return *this;
+}
+
+
+int SpriteCommander::selectedSpriteNumber() const
+{
+  return iSelectedSpriteNumber;
+}
+
+SpriteCommander& SpriteCommander::setSelectedSpriteNumber(int aSelectedSpriteNumber)
+{
+  if (!(iSelectedSpriteNumber == aSelectedSpriteNumber))
+  {
+    iSelectedSpriteNumber = aSelectedSpriteNumber;
+    notifyObservers(INotificationEvent(SpriteCommander::selectedSpriteNumberId, *this));
+  } // endif
+  return *this;
+}
+
+
+FastCanvas* SpriteCommander::fastCanvas() const
+{
+  return iFastCanvas;
+}
+
+SpriteCommander& SpriteCommander::setFastCanvas(FastCanvas* aFastCanvas)
+{
+  if (!(iFastCanvas == aFastCanvas))
+  {
+    iFastCanvas = aFastCanvas;
+    notifyObservers(INotificationEvent(SpriteCommander::fastCanvasId, *this));
+  } // endif
+  return *this;
+}
+
+IPoint SpriteCommander::fastMovementMultiplier() const
+{
+  return iFastMovementMultiplier;
+}
+
+SpriteCommander& SpriteCommander::setFastMovementMultiplier(const IPoint& aFastMovementMultiplier)
+{
+  if (!(iFastMovementMultiplier == aFastMovementMultiplier))
+  {
+    iFastMovementMultiplier = aFastMovementMultiplier;
+    notifyObservers(INotificationEvent(SpriteCommander::fastMovementMultiplierId, *this));
+  } // endif
+  return *this;
+}
+
+// Feature source code generation ends here.
+
+Sprite & SpriteCommander::selectedSprite () const
+{
+  return *iSpriteSequence->elementAtPosition (iSelectedSpriteNumber);
+}
+
+SpriteCommander& SpriteCommander::advanceFrame(int numFrames)
+{
+  selectedSprite().advanceFrame (numFrames);
+  iFastCanvas->draw();
+  return *this;
+}
+
+SpriteCommander& SpriteCommander::move(IPoint const& offset)
+{
+  selectedSprite().move(offset);
+  iFastCanvas->draw();
+  return *this;
+}
+
+SpriteCommander& SpriteCommander::moveFast(IPoint const& offset)
+{
+  return move (offset * iFastMovementMultiplier);
+}
+
+
+
+

@@ -1,0 +1,13 @@
+
+
+// Feature source code generation begins here...
+public:
+  virtual SpriteDropHandler* spriteDropHandler() const;
+  virtual SpriteDetails& setSpriteDropHandler(SpriteDropHandler* aSpriteDropHandler);
+  virtual SpriteDetails& initializeDirectManipulation();
+
+  static INotificationId spriteDropHandlerId;
+
+private:
+  SpriteDropHandler* iSpriteDropHandler;
+// Feature source code generation ends here.

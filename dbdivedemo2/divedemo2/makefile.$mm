@@ -1,0 +1,189 @@
+:TARGET.SUFFIXES
+:DEPENDENCY..cpp .exe .map .obj .rc .rcx .res .sym 
+:TARGET.all
+:DEPENDENCY.
+.\DiveDemo2.sym
+:RULE..cpp.obj
+:ACTION.Compile::C++ Compiler
+:COMMAND.
+icc.exe /DINCL_PM /DINCL_DOS /Wcndcnscnvdclenuextgengotinilanobsordporprorearettruunduni /Tx /O /Gm /Gd /G5 /Tm /C %s
+:RULE.{F:\devel\DiveDemo2}.cpp.obj
+:ACTION.Compile::C++ Compiler
+:COMMAND.
+icc.exe /DINCL_PM /DINCL_DOS /Wcndcnscnvdclenuextgengotinilanobsordporprorearettruunduni /Tx /O /Gm /Gd /G5 /Tm /C %s
+:RULE..rcx.rc
+:ACTION.Compile::Resource Precompile
+:COMMAND.
+icc.exe -c /Pc+ /Pe+ /Pd /I. %s > %|dpfF.rc
+:RULE.{F:\devel\DiveDemo2}.rcx.rc
+:ACTION.Compile::Resource Precompile
+:COMMAND.
+icc.exe -c /Pc+ /Pe+ /Pd /I. %s > %|dpfF.rc
+:RULE..rc.res
+:ACTION.Compile::Resource Compiler
+:COMMAND.
+rc.exe -r %s %|dpfF.RES
+:RULE.{F:\devel\DiveDemo2}.rc.res
+:ACTION.Compile::Resource Compiler
+:COMMAND.
+rc.exe -r %s %|dpfF.RES
+:RULE..exe.sym
+:ACTION.MapSym::Map Symbols
+:COMMAND.
+mapsym.exe %|fF.map
+:RULE.{F:\devel\DiveDemo2}.exe.sym
+:ACTION.MapSym::Map Symbols
+:COMMAND.
+mapsym.exe %|fF.map
+:RULE..map.sym
+:ACTION.MapSym::Map Symbols
+:COMMAND.
+mapsym.exe %|fF.map
+:RULE.{F:\devel\DiveDemo2}.map.sym
+:ACTION.MapSym::Map Symbols
+:COMMAND.
+mapsym.exe %|fF.map
+:TARGET..\DiveDemo2.exe
+:DEPENDENCY.
+.\StarFieldRenderer.obj
+.\vbmain.obj
+.\DiveDemo2.obj
+.\FaderRenderer.obj
+.\Star.obj
+.\DiveDemo2.res
+{$(LIB)}os2386.lib
+{$(LIB)}mmpm2.lib
+{$(LIB)}divepart.lib
+:ACTION.Link::Linker
+:COMMAND.
+icc.exe @<<
+/DINCL_PM
+ /DINCL_DOS
+ 
+ /Tdp 
+ /Wcndcnscnvdclenuextgengotinilanobsordporprorearettruunduni 
+ /Tx 
+ /O /Gm /Gd /G5 /Tm 
+ /B" /pmtype:pm /m"
+ /FeDiveDemo2.exe 
+ os2386.lib 
+ mmpm2.lib 
+ divepart.lib 
+ .\StarFieldRenderer.obj
+ .\vbmain.obj
+ .\DiveDemo2.obj
+ .\FaderRenderer.obj
+ .\Star.obj
+<<
+:ACTION.Bind::Resource Bind
+:COMMAND.
+rc.exe .\DiveDemo2.res DiveDemo2.exe
+:TARGET..\StarFieldRenderer.obj
+:DEPENDENCY.
+F:\devel\DiveDemo2\StarFieldRenderer.cpp
+{F:\devel\DiveDemo2;$(INCLUDE);}os2.h
+{F:\devel\DiveDemo2;$(INCLUDE);}StarFieldRenderer.hpp
+{F:\devel\DiveDemo2;$(INCLUDE);}DiveImageRenderer.hpp
+{F:\devel\DiveDemo2;$(INCLUDE);}IPoint.hpp
+{F:\devel\DiveDemo2;$(INCLUDE);}star.hpp
+{F:\devel\DiveDemo2;$(INCLUDE);}StarFieldRenderer.h
+{F:\devel\DiveDemo2;$(INCLUDE);}StarFieldRenderer.hpv
+{F:\devel\DiveDemo2;$(INCLUDE);}itrace.hpp
+{F:\devel\DiveDemo2;$(INCLUDE);}iexcept.hpp
+{F:\devel\DiveDemo2;$(INCLUDE);}Star.h
+{F:\devel\DiveDemo2;$(INCLUDE);}Star.hpv
+{F:\devel\DiveDemo2;$(INCLUDE);}StarFieldRenderer.hppcst
+{F:\devel\DiveDemo2;$(INCLUDE);}Star.hppcst
+{F:\devel\DiveDemo2;$(INCLUDE);}Star.inl
+{F:\devel\DiveDemo2;$(INCLUDE);}StarFieldRenderer.cpv
+{F:\devel\DiveDemo2;$(INCLUDE);}StarFieldRenderer.cppcst
+:TARGET..\Star.obj
+:DEPENDENCY.
+F:\devel\DiveDemo2\Star.cpp
+{F:\devel\DiveDemo2;$(INCLUDE);}os2.h
+{F:\devel\DiveDemo2;$(INCLUDE);}IPoint.hpp
+{F:\devel\DiveDemo2;$(INCLUDE);}star.hpp
+{F:\devel\DiveDemo2;$(INCLUDE);}itrace.hpp
+{F:\devel\DiveDemo2;$(INCLUDE);}iexcept.hpp
+{F:\devel\DiveDemo2;$(INCLUDE);}Star.h
+{F:\devel\DiveDemo2;$(INCLUDE);}Star.hpv
+{F:\devel\DiveDemo2;$(INCLUDE);}Star.hppcst
+{F:\devel\DiveDemo2;$(INCLUDE);}Star.inl
+{F:\devel\DiveDemo2;$(INCLUDE);}Star.cpv
+{F:\devel\DiveDemo2;$(INCLUDE);}Star.cppcst
+:TARGET..\FaderRenderer.obj
+:DEPENDENCY.
+F:\devel\DiveDemo2\FaderRenderer.cpp
+{F:\devel\DiveDemo2;$(INCLUDE);}os2.h
+{F:\devel\DiveDemo2;$(INCLUDE);}FaderRenderer.hpp
+{F:\devel\DiveDemo2;$(INCLUDE);}DiveImageRenderer.hpp
+{F:\devel\DiveDemo2;$(INCLUDE);}FaderRenderer.h
+{F:\devel\DiveDemo2;$(INCLUDE);}FaderRenderer.hpv
+{F:\devel\DiveDemo2;$(INCLUDE);}FaderRenderer.hppcst
+{F:\devel\DiveDemo2;$(INCLUDE);}FaderRenderer.cpv
+{F:\devel\DiveDemo2;$(INCLUDE);}FaderRenderer.cppcst
+:TARGET..\DiveDemo2.obj
+:DEPENDENCY.
+F:\devel\DiveDemo2\DiveDemo2.cpp
+{F:\devel\DiveDemo2;$(INCLUDE);}DiveDemo2.hpp
+{F:\devel\DiveDemo2;$(INCLUDE);}os2.h
+{F:\devel\DiveDemo2;$(INCLUDE);}stdlib.h
+{F:\devel\DiveDemo2;$(INCLUDE);}time.h
+{F:\devel\DiveDemo2;$(INCLUDE);}DiveDemo2.h
+{F:\devel\DiveDemo2;$(INCLUDE);}DiveDemo2.hpv
+{F:\devel\DiveDemo2;$(INCLUDE);}FastCanvas.hpp
+{F:\devel\DiveDemo2;$(INCLUDE);}StarFieldRenderer.hpp
+{F:\devel\DiveDemo2;$(INCLUDE);}FaderRenderer.hpp
+{F:\devel\DiveDemo2;$(INCLUDE);}DiveDemo2.cpv
+{F:\devel\DiveDemo2;$(INCLUDE);}DiveImageRenderer.hpp
+{F:\devel\DiveDemo2;$(INCLUDE);}IPoint.hpp
+{F:\devel\DiveDemo2;$(INCLUDE);}star.hpp
+{F:\devel\DiveDemo2;$(INCLUDE);}StarFieldRenderer.h
+{F:\devel\DiveDemo2;$(INCLUDE);}StarFieldRenderer.hpv
+{F:\devel\DiveDemo2;$(INCLUDE);}FaderRenderer.h
+{F:\devel\DiveDemo2;$(INCLUDE);}FaderRenderer.hpv
+{F:\devel\DiveDemo2;$(INCLUDE);}DiveDemo2.cppcst
+{F:\devel\DiveDemo2;$(INCLUDE);}itrace.hpp
+{F:\devel\DiveDemo2;$(INCLUDE);}iexcept.hpp
+{F:\devel\DiveDemo2;$(INCLUDE);}Star.h
+{F:\devel\DiveDemo2;$(INCLUDE);}Star.hpv
+{F:\devel\DiveDemo2;$(INCLUDE);}StarFieldRenderer.hppcst
+{F:\devel\DiveDemo2;$(INCLUDE);}FaderRenderer.hppcst
+{F:\devel\DiveDemo2;$(INCLUDE);}Star.hppcst
+{F:\devel\DiveDemo2;$(INCLUDE);}Star.inl
+:TARGET..\vbmain.obj
+:DEPENDENCY.
+F:\devel\DiveDemo2\vbmain.cpp
+{F:\devel\DiveDemo2;$(INCLUDE);}DiveDemo2.hpp
+{F:\devel\DiveDemo2;$(INCLUDE);}os2.h
+{F:\devel\DiveDemo2;$(INCLUDE);}stdlib.h
+{F:\devel\DiveDemo2;$(INCLUDE);}time.h
+{F:\devel\DiveDemo2;$(INCLUDE);}DiveDemo2.h
+{F:\devel\DiveDemo2;$(INCLUDE);}DiveDemo2.hpv
+:TARGET..\DiveDemo2.rc
+:DEPENDENCY.
+F:\devel\DiveDemo2\DiveDemo2.rcx
+{F:\devel\DiveDemo2;$(INCLUDE)}DiveDemo2.rci
+{F:\devel\DiveDemo2;$(INCLUDE)}FastCanvas.rci
+{F:\devel\DiveDemo2;$(INCLUDE)}FaderRenderer.rci
+{F:\devel\DiveDemo2;$(INCLUDE)}DiveImageRenderer.rci
+{F:\devel\DiveDemo2;$(INCLUDE)}FaderRenderer.h
+{F:\devel\DiveDemo2;$(INCLUDE)}StarFieldRenderer.rci
+{F:\devel\DiveDemo2;$(INCLUDE)}StarFieldRenderer.h
+{F:\devel\DiveDemo2;$(INCLUDE)}DiveDemo2.h
+:TARGET..\DiveDemo2.res
+:DEPENDENCY.
+.\DiveDemo2.rc
+{.;$(INCLUDE)}FastCanvas.h
+{.;$(INCLUDE)}FaderRenderer.h
+{.;$(INCLUDE)}DiveImageRenderer.h
+{.;$(INCLUDE)}StarFieldRenderer.h
+{.;$(INCLUDE)}DiveImageBuffer.h
+{.;$(INCLUDE)}DiveBlitterHandler.h
+{.;$(INCLUDE)}DiveDemo2.h
+:TARGET..\DiveDemo2.sym
+:DEPENDENCY.
+.\DiveDemo2.exe
+:TARGET..\DiveDemo2.sym
+:DEPENDENCY.
+F:\devel\DiveDemo2\DiveDemo2.map

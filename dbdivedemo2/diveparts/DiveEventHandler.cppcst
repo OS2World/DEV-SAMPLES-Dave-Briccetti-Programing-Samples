@@ -1,0 +1,42 @@
+DiveEventHandler::DiveEventHandler (DiveBlitterHandler * aDiveBlitterHandler) :
+   IHandler (),
+   iDiveBlitterHandler (aDiveBlitterHandler)
+{
+   IFUNCTRACE_DEVELOP();
+}
+
+Boolean DiveEventHandler::dispatchHandlerEvent(IEvent& event)
+{
+   switch (event.eventId())
+   {
+      case WM_VRNDISABLED:
+      {
+         iDiveBlitterHandler->enableBlitting (False);
+         event.setResult (0);
+         return True;
+      }
+
+      case WM_VRNENABLED:
+      {
+         iDiveBlitterHandler->enableBlitting (True);
+         event.setResult (0);
+         return True;
+      }
+
+      case WM_COMMAND:
+      {
+         FastCanvas * const fastCanvas =
+            (FastCanvas *) event.dispatchingWindow();
+         fastCanvas->notifyObservers
+            (INotificationEvent(FastCanvas::drawFrequencyActualFPSId,
+            *fastCanvas));
+         event.setResult (0);
+         return False;
+      }
+   }
+
+   return False;
+}
+
+
+

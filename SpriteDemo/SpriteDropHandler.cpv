@@ -1,0 +1,122 @@
+
+// Feature source code generation begins here...
+INotificationId SpriteDropHandler::filenameId = "SpriteDropHandler::filename";
+INotificationId SpriteDropHandler::targetWindowId = "SpriteDropHandler::targetWindow";
+INotificationId SpriteDropHandler::fileDroppedId = "SpriteDropHandler::fileDropped";
+
+IString SpriteDropHandler::filename() const
+{
+  return iFilename;
+}
+
+SpriteDropHandler& SpriteDropHandler::setFilename(const IString& aFilename)
+{
+  if (!(iFilename == aFilename))
+  {
+    iFilename = aFilename;
+    notifyObservers(INotificationEvent(SpriteDropHandler::filenameId, *this));
+  } // endif
+  return *this;
+}
+
+IWindow* SpriteDropHandler::targetWindow() const
+{
+  return iTargetWindow;
+}
+
+SpriteDropHandler& SpriteDropHandler::setTargetWindow(IWindow* aTargetWindow)
+{
+  if (!(iTargetWindow == aTargetWindow))
+  {
+    iTargetWindow = aTargetWindow;
+    notifyObservers(INotificationEvent(SpriteDropHandler::targetWindowId, *this));
+  } // endif
+  return *this;
+}
+
+// Feature source code generation ends here.
+
+
+
+SpriteDropHandler& SpriteDropHandler::initializeDirectManipulation()
+{
+  IDMHandler :: enableDropOn (targetWindow());
+  targetWindow()->setItemProvider (&iDragItemProvider);
+  return *this;
+}
+
+
+/*------------------------------------------------------------------------------
+| ItemProvider::provideEnterSupport                                         |
+|                                                                              |
+------------------------------------------------------------------------------*/
+Boolean SpriteDropHandler :: DragItemProvider :: provideEnterSupport
+( IDMTargetEnterEvent& event )
+{
+   IFUNCTRACE_DEVELOP();
+
+  /***********************************************************************/
+  /* Get handle to the drag target operation                             */
+  /***********************************************************************/
+  IDMTargetOperation::Handle targetOp = IDMTargetOperation::targetOperation();
+
+  /***********************************************************************/
+  /* Filter the types of items that we allow to be dropped.              */
+  /***********************************************************************/
+  IDMItem::Handle pTgtDIH = targetOp->item(1);
+  IString strTypes = pTgtDIH->types();
+
+  /***********************************************************************/
+  /* If type is "Plain Text", then filter based upon the ".bmp"          */
+  /* extension.                                                          */
+  /***********************************************************************/
+    if ((strTypes.includes( IDM::plainText ))  &&
+        (pTgtDIH->sourceName().lowerCase().includes( ".gfi" )))
+    {
+      return( true );
+    }
+
+  /***********************************************************************/
+  /* Type is not recognized - set the drop indicator to prevent a drop!  */
+  /***********************************************************************/
+  event.setDropIndicator( IDM::neverOk );
+  return( false );
+}
+
+/*------------------------------------------------------------------------------
+| DragItem::DragItem                                                           |
+|                                                                              |
+| Constructor.                                                                 |
+------------------------------------------------------------------------------*/
+SpriteDropHandler :: DragItem :: DragItem ( const IDMItem::Handle& item )
+  :
+   IDMItem( item )
+{
+}
+
+DragItemProvider (SpriteDropHandler * aSpriteDropHandler);
+/*------------------------------------------------------------------------------
+| DragItem::targetDrop                                        |
+|                                                                              |
+| Take the dropped file, create a PM bitmap object,                            |
+| and set it into the target window.                                           |
+------------------------------------------------------------------------------*/
+Boolean SpriteDropHandler :: DragItem :: targetDrop
+( IDMTargetDropEvent& event )
+{
+  SpriteDetails * iSpriteDetails =
+    (SpriteDetails *) (targetOperation()->targetWindow());
+  SpriteDropHandler * iSpriteDropHandler =
+    iSpriteDetails->spriteDropHandler();
+
+  IString fname = containerName() + sourceName();
+
+  iSpriteDropHandler->setFilename (fname);
+  iSpriteDropHandler->notifyObservers(
+    INotificationEvent (SpriteDropHandler::fileDroppedId,
+    *iSpriteDropHandler));
+
+  return( true );
+}
+
+

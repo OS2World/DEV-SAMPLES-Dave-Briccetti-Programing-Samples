@@ -1,0 +1,13 @@
+#include "Timer0.cppcst"
+
+// Feature source code generation begins here...
+INotificationId Timer0::timeId = "Timer0::time";
+
+ULONG Timer0::time() const
+{
+  return *pulTimer;
+}
+
+// Feature source code generation ends here.
+
+

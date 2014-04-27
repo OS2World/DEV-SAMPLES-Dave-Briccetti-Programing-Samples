@@ -1,0 +1,29 @@
+Upload Information Template for Hobbes.nmsu.edu
+                          ===============================================
+
+        Archive Filename: DB-Samples.zip
+       Short Description: Dave Briccetti Programing Samples. (1995-1996) 
+        Long Description: This are the Dave Briccetti Programing Samples for his demos Air Traffic Control Container, Slip Canvas, Sprite Animator, UICL Throw Error Macros Demo and DIVE DEMO 2 - Simple Animation. (1995-1996).
+
+Dave Briccetti accepted that this demos became part of the EDM/2 wiki under the Creative Commons Attribution-Share Alike 3.0 license and you can find the article at: http://www.edm2.com/index.php/Dave_Briccetti_Programming_Samples
+
+This articles were rescued from: http://web.archive.org/web/20000901011608/http://www.davebsoft.com/Programming/tips/index.html
+
+      Proposed directory
+           for placement: /pub/os2/dev/misc
+
+               Your name: Martin Iturbide 
+           Email address: martin@os2world.com
+    Program contact name: Dave Briccetti
+   Program contact email: (none)
+             Program URL: http://www.edm2.com/index.php/Dave_Briccetti_Programming_Samples
+
+      Would you like the
+   contact email address
+    included in listings? yes
+
+Operating System/Version: 
+ Additional requirements: 
+
+                Replaces: (none)
+

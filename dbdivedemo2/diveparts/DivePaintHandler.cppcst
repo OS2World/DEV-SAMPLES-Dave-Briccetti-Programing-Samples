@@ -1,0 +1,51 @@
+#include <ipainhdr.hpp>
+#include "FastCanvas.hpp"
+
+
+DivePaintHandler::DivePaintHandler (IPrivateResource *aDrawingSerializer) :
+   IPaintHandler (),
+   iDrawingSerializer (aDrawingSerializer)
+{
+   IFUNCTRACE_DEVELOP();
+}
+
+
+Boolean DivePaintHandler::paintWindow(IPaintEvent& event)
+{
+   IFUNCTRACE_DEVELOP();
+
+   FastCanvas * const fastCanvas = (FastCanvas *) event.dispatchingWindow();
+
+   if (fastCanvas->isAnimationRunning())
+   {
+      ITRACE_DEVELOP ("Not painting because animation is running");
+   }
+   else
+   {
+      IResourceLock lock (*iDrawingSerializer);
+      ISize const & const fastCanvasSize = fastCanvas->size();
+
+      IASSERTSTATE (fastCanvasSize != ISize(0,0));
+      IASSERTSTATE (fastCanvas->bufferSize() != ISize(0,0));
+
+      UINT const slackPixels = fastCanvas->size().width() -
+         fastCanvas->bufferSize().width();
+
+      if (slackPixels)
+      {
+         UINT const leftEdgeOfSlackSpace = fastCanvas->bufferSize().width() - 1;
+         IRectangle rclFill (IPoint(leftEdgeOfSlackSpace, 0),
+            ISize(slackPixels + 1, fastCanvasSize.height()));
+         event.clearBackground (rclFill, fastCanvas->parent()->backgroundColor());
+      }
+
+      fastCanvas->draw ();
+   }
+
+   return True;
+}
+
+
+
+
+

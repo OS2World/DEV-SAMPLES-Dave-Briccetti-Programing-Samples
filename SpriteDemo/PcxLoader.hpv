@@ -1,0 +1,23 @@
+
+// Feature source code generation begins here...
+public:
+  virtual ifstream* pcxFile() const;
+  virtual unsigned int imageSize() const;
+  virtual unsigned int imageWidth() const;
+  virtual unsigned int imageHeight() const;
+  virtual PcxLoader& loadFile(IString const& fileName);
+  virtual PcxLoader const & getImage(unsigned char* imageBuffer) const;
+  virtual PcxLoader const & getPalette(unsigned char* paletteBuffer) const;
+
+  static INotificationId pcxFileId;
+  static INotificationId imageSizeId;
+  static INotificationId imageWidthId;
+  static INotificationId imageHeightId;
+
+private:
+  ifstream* iPcxFile;
+  unsigned int iImageSize;
+  unsigned int iImageWidth;
+  unsigned int iImageHeight;
+// Feature source code generation ends here.
+

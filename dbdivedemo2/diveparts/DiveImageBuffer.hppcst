@@ -1,0 +1,11 @@
+public:
+
+#include "DiveImageBuffer.inl"
+
+void userConstructor ();
+void userDestructor ();
+
+private:
+   ULONG bufferLength;
+
+

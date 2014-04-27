@@ -1,0 +1,7 @@
+
+Warning: subpart builder named moveRight tried to set missing attribute named '#framingSpec' of an an AvlPartInstanceRef(IMenuItem*)('moveRight')
+Warning: subpart builder named previousFrameMenuItem tried to set missing attribute named '#framingSpec' of an an AvlPartInstanceRef(IMenuItem*)('previousFrameMenuItem')
+Warning: subpart builder named nextFrameMenuItem tried to set missing attribute named '#framingSpec' of an an AvlPartInstanceRef(IMenuItem*)('nextFrameMenuItem')
+Warning: subpart builder named moveRight tried to set missing attribute named '#framingSpec' of an an AvlPartInstanceRef(IMenuItem*)('moveRight')
+Warning: subpart builder named previousFrameMenuItem tried to set missing attribute named '#framingSpec' of an an AvlPartInstanceRef(IMenuItem*)('previousFrameMenuItem')
+Warning: subpart builder named nextFrameMenuItem tried to set missing attribute named '#framingSpec' of an an AvlPartInstanceRef(IMenuItem*)('nextFrameMenuItem')

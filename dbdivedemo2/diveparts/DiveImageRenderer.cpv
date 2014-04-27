@@ -1,0 +1,52 @@
+#include "DiveImageRenderer.cppcst"
+
+// Feature source code generation begins here...
+#pragma export (DiveImageRenderer::fastCanvasId)
+INotificationId DiveImageRenderer::fastCanvasId = "DiveImageRenderer::fastCanvas";
+
+#pragma export (DiveImageRenderer::fastCanvas() const)
+FastCanvas* DiveImageRenderer::fastCanvas() const
+{
+  return iFastCanvas;
+}
+
+#pragma export (DiveImageRenderer::setFastCanvas(FastCanvas* aFastCanvas))
+DiveImageRenderer& DiveImageRenderer::setFastCanvas(FastCanvas* aFastCanvas)
+{
+  if (!(iFastCanvas == aFastCanvas))
+  {
+    iFastCanvas = aFastCanvas;
+    notifyObservers(INotificationEvent(DiveImageRenderer::fastCanvasId, *this));
+  } // endif
+  return *this;
+}
+
+
+// Feature source code generation ends here.
+
+
+// Feature source code generation begins here...
+INotificationId DiveImageRenderer::numPaletteEntriesId = "DiveImageRenderer::numPaletteEntries";
+INotificationId DiveImageRenderer::paletteId = "DiveImageRenderer::palette";
+
+DiveImageRenderer& DiveImageRenderer::setNumPaletteEntries(int aNumPaletteEntries)
+{
+  if (!(iNumPaletteEntries == aNumPaletteEntries))
+  {
+    iNumPaletteEntries = aNumPaletteEntries;
+    notifyObservers(INotificationEvent(DiveImageRenderer::numPaletteEntriesId, *this));
+  } // endif
+  return *this;
+}
+
+DiveImageRenderer& DiveImageRenderer::setPalette(RGB2 const* aPalette)
+{
+  if (!(iPalette == aPalette))
+  {
+    iPalette = aPalette;
+    notifyObservers(INotificationEvent(DiveImageRenderer::paletteId, *this));
+  } // endif
+  return *this;
+}
+
+// Feature source code generation ends here.

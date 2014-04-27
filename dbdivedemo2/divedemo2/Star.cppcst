@@ -1,0 +1,14 @@
+
+void Star::userConstructor (ISize const & modelSpaceSize, int numDistances)
+{
+   iPosition.setX (rand() % modelSpaceSize.width ());
+   iPosition.setY (rand() % modelSpaceSize.height());
+   iDistanceIndex = rand() % numDistances + 1;
+}
+
+void Star::userDestructor ()
+{
+}
+
+
+

@@ -1,0 +1,49 @@
+#include "DiveImageBuffer.cppcst"
+
+// Feature source code generation begins here...
+INotificationId DiveImageBuffer::bufferId = "DiveImageBuffer::buffer";
+INotificationId DiveImageBuffer::diveHandleId = "DiveImageBuffer::diveHandle";
+INotificationId DiveImageBuffer::imageNumberId = "DiveImageBuffer::imageNumber";
+INotificationId DiveImageBuffer::sizeId = "DiveImageBuffer::size";
+INotificationId DiveImageBuffer::drawingSerializerId = "DiveImageBuffer::drawingSerializer";
+
+DiveImageBuffer& DiveImageBuffer::setDiveHandle(HDIVE aDiveHandle)
+{
+  if (!(iDiveHandle == aDiveHandle))
+  {
+    iDiveHandle = aDiveHandle;
+    notifyObservers(INotificationEvent(DiveImageBuffer::diveHandleId, *this));
+  } // endif
+  return *this;
+}
+
+DiveImageBuffer& DiveImageBuffer::setImageNumber(ULONG aImageNumber)
+{
+  if (!(iImageNumber == aImageNumber))
+  {
+    iImageNumber = aImageNumber;
+    notifyObservers(INotificationEvent(DiveImageBuffer::imageNumberId, *this));
+  } // endif
+  return *this;
+}
+
+IPrivateResource* DiveImageBuffer::drawingSerializer() const
+{
+  return iDrawingSerializer;
+}
+
+DiveImageBuffer& DiveImageBuffer::setDrawingSerializer(IPrivateResource* aDrawingSerializer)
+{
+  if (!(iDrawingSerializer == aDrawingSerializer))
+  {
+    iDrawingSerializer = aDrawingSerializer;
+    notifyObservers(INotificationEvent(DiveImageBuffer::drawingSerializerId, *this));
+  } // endif
+  return *this;
+}
+
+
+// Feature source code generation ends here.
+
+
+

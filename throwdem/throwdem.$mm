@@ -1,0 +1,39 @@
+:TARGET.SUFFIXES
+:DEPENDENCY..CPP .RC .obj .res 
+:TARGET.all
+:DEPENDENCY.
+U:\DevSIG\Tips\Throw_Demo\pmprintf.exe
+U:\DevSIG\Tips\Throw_Demo\throwdem.exe
+:RULE..CPP.obj
+:ACTION.Compile::C++ Compiler
+:COMMAND.
+icc.exe /DIC_TRACE_ALL /DIC_DEVELOP /Tdp /Ti /Gm /Gd /Fo"%|dpfF.obj" /C %s
+:RULE..RC.res
+:ACTION.Compile::Resource Compiler
+:COMMAND.
+rc.exe -r %s %|dpfF.RES
+:TARGET.U:\DevSIG\Tips\Throw_Demo\throwdem.exe
+:DEPENDENCY.
+U:\DevSIG\Tips\Throw_Demo\THROWDEM.obj
+U:\DevSIG\Tips\Throw_Demo\THROWDEM.res
+throwdem.mak
+:ACTION.Link::Linker
+:COMMAND.
+icc.exe @<<
+ /B" /de /pmtype:pm"
+ /FeU:\DevSIG\Tips\Throw_Demo\throwdem.exe 
+ U:\DevSIG\Tips\Throw_Demo\THROWDEM.obj
+<<
+:ACTION.Bind::Resource Bind
+:COMMAND.
+rc.exe U:\DevSIG\Tips\Throw_Demo\THROWDEM.res U:\DevSIG\Tips\Throw_Demo\throwdem.exe
+:TARGET.U:\DevSIG\Tips\Throw_Demo\THROWDEM.obj
+:DEPENDENCY.
+U:\DevSIG\Tips\Throw_Demo\THROWDEM.CPP
+{U:\DevSIG\Tips\Throw_Demo;$(INCLUDE);}idres.h
+throwdem.mak
+:TARGET.U:\DevSIG\Tips\Throw_Demo\THROWDEM.res
+:DEPENDENCY.
+U:\DevSIG\Tips\Throw_Demo\THROWDEM.RC
+{$(INCLUDE)}idres.h
+throwdem.mak

@@ -1,0 +1,41 @@
+private:
+   void disableBlitting();
+   void setUpBlitter();
+
+// Feature source code generation begins here...
+public:
+  virtual IWindow* window() const;
+  virtual DiveBlitterHandler& setWindow(IWindow* aWindow);
+  virtual HDIVE diveHandle() const;
+  virtual DiveBlitterHandler& setDiveHandle(HDIVE aDiveHandle);
+  virtual Boolean isBlitting() const;
+  virtual DiveBlitterHandler& enableBlitting(Boolean enable = true);
+
+  static INotificationId windowId;
+  static INotificationId diveHandleId;
+  static INotificationId blittingId;
+
+private:
+  IWindow* iWindow;
+  HDIVE iDiveHandle;
+  Boolean iBlitting;
+// Feature source code generation ends here.
+
+
+// Feature source code generation begins here...
+public:
+  virtual IPrivateResource* drawingSerializer() const;
+
+  static INotificationId drawingSerializerId;
+
+private:
+  IPrivateResource* iDrawingSerializer;
+// Feature source code generation ends here.
+
+
+// Feature source code generation begins here...
+public:
+  virtual DiveBlitterHandler& setDrawingSerializer(IPrivateResource* aDrawingSerializer);
+
+
+// Feature source code generation ends here.

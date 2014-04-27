@@ -1,0 +1,5 @@
+private:
+   virtual void userConstructor();
+   virtual void userDestructor();
+
+

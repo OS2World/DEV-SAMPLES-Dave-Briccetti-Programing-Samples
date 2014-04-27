@@ -1,0 +1,111 @@
+
+
+// Feature source code generation begins here...
+INotificationId GraphicFileInfo::imageFilenameId = "GraphicFileInfo::imageFilename";
+INotificationId GraphicFileInfo::numFramesId = "GraphicFileInfo::numFrames";
+INotificationId GraphicFileInfo::firstFrameAngleId = "GraphicFileInfo::firstFrameAngle";
+INotificationId GraphicFileInfo::numPaletteEntriesId = "GraphicFileInfo::numPaletteEntries";
+
+IString GraphicFileInfo::imageFilename() const
+{
+  return iImageFilename;
+}
+
+GraphicFileInfo& GraphicFileInfo::setImageFilename(const IString& aImageFilename)
+{
+  if (!(iImageFilename == aImageFilename))
+  {
+    iImageFilename = aImageFilename;
+    notifyObservers(INotificationEvent(GraphicFileInfo::imageFilenameId, *this));
+  } // endif
+  return *this;
+}
+
+unsigned int GraphicFileInfo::numFrames() const
+{
+  return iNumFrames;
+}
+
+GraphicFileInfo& GraphicFileInfo::setNumFrames(unsigned int aNumFrames)
+{
+  if (!(iNumFrames == aNumFrames))
+  {
+    iNumFrames = aNumFrames;
+    notifyObservers(INotificationEvent(GraphicFileInfo::numFramesId, *this));
+  } // endif
+  return *this;
+}
+
+int GraphicFileInfo::firstFrameAngle() const
+{
+  return iFirstFrameAngle;
+}
+
+GraphicFileInfo& GraphicFileInfo::setFirstFrameAngle(int aFirstFrameAngle)
+{
+  if (!(iFirstFrameAngle == aFirstFrameAngle))
+  {
+    iFirstFrameAngle = aFirstFrameAngle;
+    notifyObservers(INotificationEvent(GraphicFileInfo::firstFrameAngleId, *this));
+  } // endif
+  return *this;
+}
+
+unsigned int GraphicFileInfo::numPaletteEntries() const
+{
+  return iNumPaletteEntries;
+}
+
+GraphicFileInfo& GraphicFileInfo::setNumPaletteEntries(unsigned int aNumPaletteEntries)
+{
+  if (!(iNumPaletteEntries == aNumPaletteEntries))
+  {
+    iNumPaletteEntries = aNumPaletteEntries;
+    notifyObservers(INotificationEvent(GraphicFileInfo::numPaletteEntriesId, *this));
+  } // endif
+  return *this;
+}
+
+GraphicFileInfo& GraphicFileInfo::loadFromFile(IString const& filename)
+{
+   ifstream info (filename);
+   char buf [200];
+   static char const szImageFilenameKeyword
+                                        [] = "ImageFilename=";
+   static char const szNumFrames        [] = "NumFrames=";
+   static char const szFirstFrameAngle  [] = "FirstFrameAngle=";
+   static char const szStartingPaletteIndex
+                                        [] = "StartingPaletteIndex=";
+   static char const szNumPaletteEntries
+                                        [] = "NumPaletteEntries=";
+   static char const szTransparentPaletteIndex
+                                        [] = "TransparentPaletteIndex=";
+
+   while (info.getline (buf, sizeof buf) && ! info.fail())
+   {
+      if (buf[0] && strncmp (buf, "//", 2) == 0)
+         ;  // Ignore empty lines and comments
+
+      else if (strncmp (buf, szImageFilenameKeyword, sizeof szImageFilenameKeyword - 1) == 0)
+         strcpy (iImageFilename, buf + sizeof szImageFilenameKeyword - 1);
+
+      else if (strncmp (buf, szNumFrames, sizeof szNumFrames - 1) == 0)
+         iNumFrames = atoi (buf + sizeof szNumFrames - 1);
+
+      else if (strncmp (buf, szFirstFrameAngle, sizeof szFirstFrameAngle - 1) == 0)
+         iFirstFrameAngle = atoi (buf + sizeof szFirstFrameAngle - 1);
+
+//      else if (strncmp (buf, szStartingPaletteIndex, sizeof szStartingPaletteIndex - 1) == 0)
+//         iStartingPaletteEntry = (UINT) atoi (buf + sizeof szStartingPaletteIndex - 1);
+
+      else if (strncmp (buf, szNumPaletteEntries, sizeof szNumPaletteEntries - 1) == 0)
+         iNumPaletteEntries = atoi (buf + sizeof szNumPaletteEntries - 1);
+
+//      else if (strncmp (buf, szTransparentPaletteIndex, sizeof szTransparentPaletteIndex - 1) == 0)
+//         iTransparentPaletteEntry = (UINT) atoi (buf + sizeof szTransparentPaletteIndex - 1);
+
+   }
+  return *this;
+}
+
+

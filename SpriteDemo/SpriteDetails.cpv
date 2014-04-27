@@ -1,0 +1,26 @@
+
+
+// Feature source code generation begins here...
+INotificationId SpriteDetails::spriteDropHandlerId = "SpriteDetails::spriteDropHandler";
+
+SpriteDropHandler* SpriteDetails::spriteDropHandler() const
+{
+  return iSpriteDropHandler;
+}
+
+SpriteDetails& SpriteDetails::setSpriteDropHandler(SpriteDropHandler* aSpriteDropHandler)
+{
+  if (!(iSpriteDropHandler == aSpriteDropHandler))
+  {
+    iSpriteDropHandler = aSpriteDropHandler;
+    notifyObservers(INotificationEvent(SpriteDetails::spriteDropHandlerId, *this));
+  } // endif
+  return *this;
+}
+
+SpriteDetails& SpriteDetails::initializeDirectManipulation()
+{
+  return *this;
+}
+
+// Feature source code generation ends here.

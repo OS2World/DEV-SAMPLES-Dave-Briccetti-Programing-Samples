@@ -1,0 +1,28 @@
+// Feature source code generation begins here...
+public:
+  virtual unsigned char const* accessImage(unsigned int frameIndex);
+  virtual unsigned int numFrames() const;
+  virtual ISize size() const;
+  virtual unsigned int bufferSize() const;
+  virtual PcxLoader* pcxLoader() const;
+  virtual unsigned char* paletteBuffer() const;
+  virtual unsigned char* imageBuffer() const;
+  virtual ImageHandler& load(IString const& fileName, unsigned int numFrames);
+
+  static INotificationId numFramesId;
+  static INotificationId sizeId;
+  static INotificationId bufferSizeId;
+  static INotificationId paletteBufferId;
+  static INotificationId imageBufferId;
+
+private:
+  virtual ImageHandler& setNumFrames(unsigned int aNumFrames);
+  unsigned int iNumFrames;
+  ISize iSize;
+  unsigned int iBufferSize;
+  PcxLoader* iPcxLoader;
+  unsigned char* iPaletteBuffer;
+  unsigned char* iImageBuffer;
+// Feature source code generation ends here.
+
+

@@ -1,0 +1,45 @@
+// Feature source code generation begins here...
+public:
+  virtual IString filename() const;
+  virtual SpriteDropHandler& setFilename(const IString& aFilename);
+  virtual IWindow* targetWindow() const;
+  virtual SpriteDropHandler& setTargetWindow(IWindow* aTargetWindow);
+  virtual SpriteDropHandler& initializeDirectManipulation();
+
+  static INotificationId filenameId;
+  static INotificationId targetWindowId;
+  static INotificationId fileDroppedId;
+
+private:
+
+class DragItem : public IDMItem
+{
+public:
+/*------------------------------- Constructor ----------------------------------
+| Objects of this class are constructed from a generic item handle.            |
+------------------------------------------------------------------------------*/
+  DragItem ( const IDMItem::Handle& item );
+
+virtual Boolean
+  targetDrop ( IDMTargetDropEvent& event );
+
+};
+
+class DragItemProvider : public IDMItemProviderFor< DragItem >
+{
+
+virtual Boolean
+  provideEnterSupport ( IDMTargetEnterEvent& event );
+
+private:
+
+SpriteDropHandler * iSpriteDropHandler;
+
+};
+
+  DragItemProvider iDragItemProvider;
+  IString iFilename;
+  IWindow* iTargetWindow;
+// Feature source code generation ends here.
+
+

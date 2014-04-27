@@ -1,0 +1,130 @@
+
+// Feature source code generation begins here...
+INotificationId PcxLoader::pcxFileId = "PcxLoader::pcxFile";
+INotificationId PcxLoader::imageSizeId = "PcxLoader::imageSize";
+INotificationId PcxLoader::imageWidthId = "PcxLoader::imageWidth";
+INotificationId PcxLoader::imageHeightId = "PcxLoader::imageHeight";
+
+ifstream* PcxLoader::pcxFile() const
+{
+  return iPcxFile;
+}
+
+unsigned int PcxLoader::imageSize() const
+{
+  return iImageSize;
+}
+
+unsigned int PcxLoader::imageWidth() const
+{
+  return iImageWidth;
+}
+
+unsigned int PcxLoader::imageHeight() const
+{
+  return iImageHeight;
+}
+
+#pragma pack(1)
+struct PcxHeader
+{
+  char manufacturer;
+  char version;
+  char encoding;
+  char bits_per_pixel;
+  short  xmin,ymin;
+  short  xmax,ymax;
+  short  hres;
+  short  vres;
+  char palette16[48];
+  char reserved;
+  char color_planes;
+  short  bytes_per_line;
+  short  palette_type;
+  char filler[58];
+};
+#pragma pack()
+
+PcxLoader& PcxLoader::loadFile(IString const& fileName)
+{
+   PcxHeader pcxHeader = {0};
+
+   iPcxFile = new ifstream (fileName, ios::in | ios::binary);
+   assert (iPcxFile);
+
+   iPcxFile->read ((char *) &pcxHeader, sizeof pcxHeader);
+   assert (pcxHeader.version == 5);
+
+   iImageWidth = pcxHeader.xmax - pcxHeader.xmin + 1U;
+   assert ((int) iImageWidth == pcxHeader.bytes_per_line);
+   iImageHeight = pcxHeader.ymax - pcxHeader.ymin + 1U;
+   iImageSize = iImageWidth * iImageHeight;
+
+   return *this;
+}
+
+PcxLoader const & PcxLoader::getImage(unsigned char* imageBuffer) const
+{
+   iPcxFile->seekg (sizeof (PcxHeader));
+
+   const int BYTEMODE=0, RUNMODE=1, BUFLEN=5*1024;
+   int mode=BYTEMODE, readlen = 0;
+   static unsigned char outbyte,bytecount;
+   static unsigned char buffer[BUFLEN];
+
+   long const image_size=imageSize();
+   int bufptr=0;
+
+   for (long i = 0; i < image_size; i ++)
+   {
+      if (mode==BYTEMODE)
+      {
+         if (bufptr >= readlen)
+         {
+            bufptr = 0;
+
+            iPcxFile->read ((char *) buffer,BUFLEN);
+            if ((readlen = iPcxFile->gcount()) == 0)
+               break;
+         }
+
+         outbyte = buffer[bufptr++];
+
+         if (outbyte > 0xbf)
+         {
+            bytecount = (unsigned char)((int)outbyte & 0x3f);
+
+            if (bufptr >= readlen)
+            {
+               bufptr = 0;
+
+               iPcxFile->read ((char *) buffer,BUFLEN);
+               if ((readlen = iPcxFile->gcount()) == 0)
+                  break;
+            }
+
+            outbyte = buffer[bufptr++];
+
+            if (--bytecount != 0)
+               mode = RUNMODE;
+         }
+      }
+      else
+         if (--bytecount == 0)
+            mode = BYTEMODE;
+
+      *imageBuffer++ = outbyte;
+   }
+
+  return *this;
+}
+
+PcxLoader const & PcxLoader::getPalette(unsigned char* paletteBuffer) const
+{
+   iPcxFile->seekg (-768L, ios::end);
+   iPcxFile->read (paletteBuffer, 3 * 256);
+
+   return *this;
+}
+
+// Feature source code generation ends here.

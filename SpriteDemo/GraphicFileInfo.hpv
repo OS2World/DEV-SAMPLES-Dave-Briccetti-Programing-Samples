@@ -1,0 +1,24 @@
+
+// Feature source code generation begins here...
+public:
+  virtual IString imageFilename() const;
+  virtual GraphicFileInfo& setImageFilename(const IString& aImageFilename);
+  virtual unsigned int numFrames() const;
+  virtual GraphicFileInfo& setNumFrames(unsigned int aNumFrames);
+  virtual int firstFrameAngle() const;
+  virtual GraphicFileInfo& setFirstFrameAngle(int aFirstFrameAngle);
+  virtual unsigned int numPaletteEntries() const;
+  virtual GraphicFileInfo& setNumPaletteEntries(unsigned int aNumPaletteEntries);
+  virtual GraphicFileInfo& loadFromFile(IString const& filename);
+
+  static INotificationId imageFilenameId;
+  static INotificationId numFramesId;
+  static INotificationId firstFrameAngleId;
+  static INotificationId numPaletteEntriesId;
+
+private:
+  IString iImageFilename;
+  unsigned int iNumFrames;
+  int iFirstFrameAngle;
+  unsigned int iNumPaletteEntries;
+// Feature source code generation ends here.

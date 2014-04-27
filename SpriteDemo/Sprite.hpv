@@ -1,0 +1,57 @@
+
+// Feature source code generation begins here...
+public:
+  virtual IPoint position() const;
+  virtual Sprite& setPosition(const IPoint& aPosition);
+  virtual ISize size() const;
+  virtual unsigned int activeFrame() const;
+  virtual Sprite& setActiveFrame(unsigned int aActiveFrame);
+  virtual FastCanvas* fastCanvas() const;
+  virtual Sprite& setFastCanvas(FastCanvas* aFastCanvas);
+  virtual unsigned int numFrames() const;
+  virtual Sprite& setNumFrames(unsigned int aNumFrames);
+  virtual IString filename() const;
+  virtual Sprite& setFilename(const IString& aFilename);
+  virtual IString activeFrameAsText() const;
+  virtual IString numFramesAsText() const;
+  virtual IString filenameWithoutPath() const;
+  virtual IString positionAsText() const;
+  virtual Sprite& advanceFrame(int numFramesToAdvance);
+  virtual Sprite& move(IPoint offset = IPoint(0));
+  virtual Sprite const & draw() const;
+
+  static INotificationId positionId;
+  static INotificationId sizeId;
+  static INotificationId activeFrameId;
+  static INotificationId fastCanvasId;
+  static INotificationId numFramesId;
+  static INotificationId filenameId;
+  static INotificationId filenameWithoutPathId;
+
+private:
+  void loadFrame (unsigned int iFrame);
+  virtual void copyBitmap
+(
+   PUCHAR        pabTo,
+   UCHAR const * pabFrom,
+   int           cxToRow,
+   int           cxFromRow
+) const;
+
+void drawBitmap (PUCHAR pabScreen,
+   UCHAR const * pabBitmapToDraw, int xDraw, int yDraw) const;
+
+  IPoint iPosition;
+  ISize iSize;
+  unsigned int iActiveFrame;
+  FastCanvas* iFastCanvas;
+  unsigned int iNumFrames;
+  Boolean iSpriteLoaded;
+  IString iFilename;
+  IString iFilenameWithoutPath;
+  GraphicFileInfo iGraphicFileInfo;
+  ImageHandler iImageHandler;
+  unsigned char const * pabBitmap;
+
+// Feature source code generation ends here.
+

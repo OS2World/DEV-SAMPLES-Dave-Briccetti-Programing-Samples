@@ -1,0 +1,24 @@
+#include "FaderRenderer.hppcst"
+
+
+
+
+// Feature source code generation begins here...
+public:
+  virtual FastCanvas* fastCanvas() const;
+  virtual FaderRenderer& setFastCanvas(FastCanvas* aFastCanvas);
+  virtual int numPaletteEntries() const;
+  virtual FaderRenderer& setNumPaletteEntries(int aNumPaletteEntries);
+  virtual RGB2 const* palette() const;
+  virtual FaderRenderer& setPalette(RGB2 const* aPalette);
+  virtual void render();
+
+  static INotificationId fastCanvasId;
+  static INotificationId numPaletteEntriesId;
+  static INotificationId paletteId;
+
+private:
+  FastCanvas* iFastCanvas;
+  int iNumPaletteEntries;
+  RGB2 const* iPalette;
+// Feature source code generation ends here.

@@ -1,0 +1,30 @@
+void _Export DiveImageRenderer::userConstructor()
+{
+}
+
+void _Export DiveImageRenderer::userDestructor()
+{
+}
+
+void DiveImageRenderer::render()
+{
+   IFUNCTRACE_ALL ();
+   ITRACE_ALL ("Override this function");
+}
+
+RGB2 const* DiveImageRenderer::palette() const
+{
+   IFUNCTRACE_ALL ();
+   ITRACE_ALL ("Override this function");
+   return iPalette;
+}
+
+int DiveImageRenderer::numPaletteEntries() const
+{
+   IFUNCTRACE_ALL ();
+   ITRACE_ALL ("Override this function");
+   return iNumPaletteEntries;
+}
+
+
+

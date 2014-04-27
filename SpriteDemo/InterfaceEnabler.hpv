@@ -1,0 +1,14 @@
+
+
+// Feature source code generation begins here...
+public:
+  virtual unsigned long numberOfSprites() const;
+  virtual InterfaceEnabler& setNumberOfSprites(unsigned long aNumberOfSprites);
+
+  static INotificationId numberOfSpritesId;
+  static INotificationId interfaceNeedsEnablingId;
+  static INotificationId interfaceNeedsDisablingId;
+
+private:
+  unsigned long iNumberOfSprites;
+// Feature source code generation ends here.

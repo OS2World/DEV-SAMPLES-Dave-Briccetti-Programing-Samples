@@ -1,0 +1,30 @@
+#include "StarFieldRenderer.hppcst"
+
+// Feature source code generation begins here...
+public:
+  virtual FastCanvas* fastCanvas() const;
+  virtual StarFieldRenderer& setFastCanvas(FastCanvas* aFastCanvas);
+  virtual void render();
+
+  static INotificationId fastCanvasId;
+  static INotificationId cameraHasMovedId;
+
+private:
+  FastCanvas* iFastCanvas;
+// Feature source code generation ends here.
+
+
+// Feature source code generation begins here...
+public:
+  virtual int numPaletteEntries() const;
+  virtual StarFieldRenderer& setNumPaletteEntries(int aNumPaletteEntries);
+  virtual RGB2 const* palette() const;
+  virtual StarFieldRenderer& setPalette(RGB2 const* aPalette);
+
+  static INotificationId numPaletteEntriesId;
+  static INotificationId paletteId;
+
+private:
+  int iNumPaletteEntries;
+  RGB2 const* iPalette;
+// Feature source code generation ends here.
